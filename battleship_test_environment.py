@@ -751,19 +751,12 @@ def redraw_boards():
             AI_surface_cell.grid(row=i, column=j) 
     
     redraw_gameboard.mainloop()
-    referee()
+    game_mechanics()
 
 def cannot_shoot():
     print (messagebox.showinfo("Invalid","Cannot shoot yourself. lol :P"))
     
 def shoot():
-    global AI_underwater_cell
-     
-    print (AI_underwater_cell)
-    if AI_Player["Animation"]:
-        pass
-        
-def referee():
     pass
 main_account_screen()
 
