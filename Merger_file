@@ -298,6 +298,7 @@ def signup_user():
 
 # Dictionary used to store the coordinates of the player's ships
 Player = {}
+AI_player = {'Carrier': [(2, 4, 1), (3, 4, 1), (4, 4, 1), (5, 4, 1)], 'Submarine': [(6, 10, 0), (7, 10, 0), (8, 10, 0)]}
 
 # making the screen to choose to start a new game or continue an existing game
 # imported from login/signup GUI
@@ -305,7 +306,6 @@ def basegame():
     global game_screen
     login_success_screen.destroy()
     login_screen.destroy()
-    #sign_up.
     
     game_screen = Tk()
     game_screen.title("Battleship Game")
@@ -682,9 +682,82 @@ def submarine_alert_message():
     SubmarineMsg = messagebox.askquestion('Confirmation','Do you want to place your submarine here?')
 
     if SubmarineMsg == 'yes':
-        print(Player) # Test function to make sure the dictionary is extracted correctly using the Python shell
+        redraw_boards()
     else:
         Player["Submarine"] = "" # Restoring dictionary to empty value due to rejected spot
         submarine_placing_button()
+    
+def redraw_boards():
+    global redraw_gameboard
+    global Player
+    global AI_player
+    
+    game_screen.destroy()
+    print (Player)
+    print (AI_player)
+    
+    Player["Player Surface"] = {}
+    Player["Player Underwater"] = {}
+    AI_player["AI Surface"] = {}
+    AI_player["AI Underwater"] = {}
+    
+    redraw_gameboard = Tk()
+    redraw_gameboard.title("Battleship Game")
+    redraw_gameboard.geometry("1080x1240")
+    redraw_gameboard.resizable(False, False)
+    
+    Label(redraw_gameboard, text="Player Underwater", height = 3, width = 40).grid(row=0, column=0, columnspan=10)
+    Label(redraw_gameboard, text="Player Surface", height = 3, width = 40).grid(row=0, column=12, columnspan=10)
 
+    # Preparing a spacing between the two grids
+    Label(redraw_gameboard, text="", height = 20, width = 4).grid(row=1, column=11, rowspan=10)
+    
+    for i in range(1, 11):
+        Player["Player Underwater"][i] = {}
+        for j in range(10):
+            Player["Player Underwater"][i][j] = {}
+            Player["Player Underwater"][i][j]["Animation"] = None
+            player_underwater_cell = Button(redraw_gameboard, height = 2, width = 4, command=cannot_shoot)
+            player_underwater_cell.grid(row=i, column=j)
+            
+    for i in range(1, 11):
+        Player["Player Surface"][i] = {}
+        for j in range(12, 22):
+            Player["Player Surface"][i][j] = {}
+            Player["Player Surface"][i][j]["Animation"] = None
+            player_surface_cell = Button(redraw_gameboard, height = 2, width = 4, command=cannot_shoot)
+            player_surface_cell.grid(row=i, column=j) 
+            
+    Label(redraw_gameboard, text="AI Underwater", height = 3, width = 40).grid(row=11, column=0, columnspan=10)
+    Label(redraw_gameboard, text="AI Surface", height = 3, width = 40).grid(row=11, column=11, columnspan=10)
+    
+    Label(redraw_gameboard, text="", height = 4, width = 1).grid(row=11, column=1, columnspan=10)
+
+            
+    for i in range(12, 22):
+        AI_player["AI Underwater"][i] = {}
+        for j in range(10):
+            AI_player["AI Underwater"][i][j] = {}
+            AI_player["AI Underwater"][i][j]["Animation"] = None
+            AI_underwater_cell = Button(redraw_gameboard, height = 2, width = 4, command=shoot)
+            AI_underwater_cell.grid(row=i, column=j)
+    
+    for i in range(12, 22):
+        AI_player["AI Surface"][i] = {}
+        for j in range(12, 22):
+            AI_player["AI Surface"][i][j] = {}
+            AI_player["AI Surface"][i][j]["Animation"] = {}
+            AI_surface_cell = Button(redraw_gameboard, height = 2, width = 4, command=shoot)
+            AI_surface_cell.grid(row=i, column=j) 
+    
+    redraw_gameboard.mainloop()
+
+def cannot_shoot():
+    print (messagebox.showinfo("Invalid","Cannot shoot yourself. lol :P"))
+    
+def shoot():
+    pass
 main_account_screen()
+
+
+        
