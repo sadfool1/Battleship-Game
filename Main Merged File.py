@@ -1661,7 +1661,7 @@ def AI_player_turn():
         random_surface_y = random.randint(1,10)
         AI_underwater_coordinates = (random_surface_x,random_surface_y,0)
         
-        if Player["AI Underwater"][random_surface_x][random_surface_y]["Presence"] == "HIT":
+        if Player["Player Underwater"][random_surface_x][random_surface_y]["Presence"] == "HIT":
             print ("Bot Thinking...")
             AI_player_turn()
         
