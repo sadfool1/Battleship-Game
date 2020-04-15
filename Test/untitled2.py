@@ -1600,7 +1600,7 @@ def shoot(row, column, depth):
             AI_player["AI Surface"][row][column] = Button(redraw_gameboard, 
                    height = 2, 
                    width = 4, 
-                   command = already_shot(), 
+                   command = already_shot, 
                    bg = 'red')
             
             AI_player["AI Surface"][row][column].configure(state=DISABLED)
@@ -1613,7 +1613,7 @@ def shoot(row, column, depth):
             AI_player["AI Surface"][row][column] = Button(redraw_gameboard,
                    height = 2,
                    width = 4,
-                   command = already_shot(), 
+                   command = already_shot, 
                    bg = 'black')
             
             AI_player["AI Surface"][row][column].configure(state=DISABLED)
@@ -1626,7 +1626,7 @@ def shoot(row, column, depth):
             AI_player["AI Underwater"][row][column] = Button(redraw_gameboard, 
                    height = 2,
                    width = 4,
-                   command = already_shot(), 
+                   command = already_shot, 
                    bg = 'red')
             
             AI_player["AI Underwater"][row][column].configure(state=DISABLED)
@@ -1638,7 +1638,7 @@ def shoot(row, column, depth):
             AI_player["AI Underwater"][row][column] = Button(redraw_gameboard,
                    height = 2,
                    width = 4,
-                   command = hit_missed(), 
+                   command = hit_missed, 
                    bg = 'black')
             
             AI_player["AI Underwater"][row][column].configure(state=DISABLED)
@@ -1672,7 +1672,7 @@ def AI_player_turn():
             Player["Player Underwater"][random_surface_x][random_surface_y] = Button(redraw_gameboard, 
                    height = 2,
                    width = 4,
-                   command = already_shot(), 
+                   command = already_shot, 
                    bg = 'red')
             
             Player["Player Underwater"][random_surface_x][random_surface_y].configure(state=DISABLED)
@@ -1680,6 +1680,11 @@ def AI_player_turn():
         else:
             AI_hit_missed()
             Player["Player Underwater"][random_surface_x][random_surface_y]["Presence"] = "HIT"
+            Player["Player Underwater"][random_surface_x][random_surface_y] = Button(redraw_gameboard, 
+                   height = 2,
+                   width = 4,
+                   command = already_shot, 
+                   bg = 'black')
             
     else:
         random_underwater_x = random.randint(12,21)
@@ -1697,13 +1702,18 @@ def AI_player_turn():
             Player["Player Surface"][random_underwater_x][random_underwater_y] = Button(redraw_gameboard,
                   height = 2,
                   width = 4,
-                  command = already_shot(), 
+                  command = already_shot, 
                   bg = 'red')
             
             Player["Player Surface"][random_underwater_x][random_underwater_y].configure(state=DISABLED)
         else:
             AI_hit_missed()
             Player["Player Surface"][random_underwater_x][random_underwater_y]["Presence"] = "HIT"
+            Player["Player Surface"][random_underwater_x][random_underwater_y] = Button(redraw_gameboard,
+                  height = 2,
+                  width = 4,
+                  command = already_shot, 
+                  bg = 'black')
             
 
 
