@@ -19,7 +19,7 @@ from tkinter import messagebox # for pop-up messages as part of the verification
 
 import os # importing support for different operating systems
 from random import randint # importing random module to generate random number
-
+import random
 '''
 Program code starts here
 '''
@@ -298,7 +298,8 @@ def signup_user():
 
 # Dictionary used to store the coordinates of the player's ships
 Player = {}
-AI_player = {'Carrier': [(2, 4, 1), (3, 4, 1), (4, 4, 1), (5, 4, 1)], 'Submarine': [(6, 10, 0), (7, 10, 0), (8, 10, 0)]}
+AI_player = {'Carrier': [(0,12,0), (0,13,0), (0,14,0), (0,15,0)], 
+                         'Submarine': [(12,12,1), (12,13,1), (12,14,1)]}
 
 # making the screen to choose to start a new game or continue an existing game
 # imported from login/signup GUI
@@ -692,7 +693,6 @@ def redraw_boards():
     global Player
     global AI_player
     
-    game_screen.destroy()
     print (Player)
     print (AI_player)
     
@@ -716,16 +716,22 @@ def redraw_boards():
         Player["Player Underwater"][i] = {}
         for j in range(10):
             Player["Player Underwater"][i][j] = {}
-            Player["Player Underwater"][i][j]["Animation"] = None
-            player_underwater_cell = Button(redraw_gameboard, height = 2, width = 4, command=cannot_shoot)
+            Player["Player Underwater"][i][j]["Presence"] = None
+            player_underwater_cell = Button(redraw_gameboard, 
+                                            height = 2, 
+                                            width = 4, 
+                                            command=cannot_shoot)
             player_underwater_cell.grid(row=i, column=j)
             
     for i in range(1, 11):
         Player["Player Surface"][i] = {}
         for j in range(12, 22):
             Player["Player Surface"][i][j] = {}
-            Player["Player Surface"][i][j]["Animation"] = None
-            player_surface_cell = Button(redraw_gameboard, height = 2, width = 4, command=cannot_shoot)
+            Player["Player Surface"][i][j]["Presence"] = None
+            player_surface_cell = Button(redraw_gameboard, 
+                                         height = 2, 
+                                         width = 4, 
+                                         command=cannot_shoot)
             player_surface_cell.grid(row=i, column=j) 
             
     Label(redraw_gameboard, text="AI Underwater", height = 3, width = 40).grid(row=11, column=0, columnspan=10)
@@ -738,33 +744,93 @@ def redraw_boards():
         AI_player["AI Underwater"][i] = {}
         for j in range(10):
             AI_player["AI Underwater"][i][j] = {}
-            AI_player["AI Underwater"][i][j]["Animation"] = None
-            AI_underwater_cell = Button(redraw_gameboard, height = 2, width = 4, command=shoot)
+            AI_player["AI Underwater"][i][j]["Presence"] = None
+            AI_underwater_cell = Button(redraw_gameboard, 
+                                        height = 2, 
+                                        width = 4, 
+                                        command=lambda row=j, column=i, depth = 0: shoot(row, column, depth))
             AI_underwater_cell.grid(row=i, column=j)
     
     for i in range(12, 22):
         AI_player["AI Surface"][i] = {}
         for j in range(12, 22):
             AI_player["AI Surface"][i][j] = {}
-            AI_player["AI Surface"][i][j]["Animation"] = {}
-            AI_surface_cell = Button(redraw_gameboard, height = 2, width = 4, command=shoot)
+            AI_player["AI Surface"][i][j]["Presence"] = None
+            AI_surface_cell = Button(redraw_gameboard, 
+                                     height = 2, 
+                                     width = 4, 
+                                     command=lambda row=j, column=i, depth = 1: shoot(row, column, depth))
+            
             AI_surface_cell.grid(row=i, column=j) 
     
     redraw_gameboard.mainloop()
-    referee()
+    #referee()
 
 def cannot_shoot():
     print (messagebox.showinfo("Invalid","Cannot shoot yourself. lol :P"))
+
+def cannot_shoot():
+    print (messagebox.showinfo("Invalid","You have already shot here!"))
     
-def shoot():
-    global AI_underwater_cell
-     
-    print (AI_underwater_cell)
-    if AI_Player["Animation"]:
-        pass
-        
+def shoot(row, column, depth):
+    global redraw_gameboard
+    global Player
+    global AI_player
+    
+    print (row, column, depth)
+    if depth == 1: #means AI_surface
+        for i in range(1,22):
+            for j in range (22):
+                if (row,column,0) == AI_player["Carrier"][0]:
+                    AI_player["AI Surface"][row][column]["Presence"] = "HIT"
+                    print ("boom")
+                    Button(redraw_gameboard, 
+                           height = 2, 
+                           width = 4, 
+                           command = cannot_shoot(), 
+                           bg = 'black')
+                else:
+                    AI_player_turn()
+                    
+    else:
+        for i in range(1,22):
+            for j in range (22):
+                if (row,column,0) == AI_player["Submarine"][0]:
+                    AI_player["AI Surface"][row][column]["Presence"] = "HIT"
+                    Button(redraw_gameboard, 
+                           height = 2,
+                           width = 4,
+                           command = cannot_shoot(), 
+                           bg = 'red')
+                    
+                else:
+                    Button(redraw_gameboard,
+                           height = 2,
+                           width = 4,
+                           command = cannot_shoot(), 
+                           bg = 'black')
+                    AI_player_turn()
+         
+            
+def AI_player_turn():
+    global redraw_gameboard
+    global Player
+    global AI_player
+    
+    random_surface = random.randint(0,1)
+    
+    
+    
+""" 
 def referee():
-    pass
+    if Player["AI Underwater"][i][j]["Presence"] == False:
+        AI_player["AI Underwater"][i][j]["Presence"] = True
+    
+    else:
+        AI_player["AI Underwater"][i][j]["Presence"] = False
+        
+"""   
+        
 main_account_screen()
 
 

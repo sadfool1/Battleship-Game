@@ -1644,23 +1644,9 @@ def AI_player_turn():
     global AI_player
     
     random_surface = random.randint(0,1)
-    
     if random_surface == 0:
         random_surface_x = random.randint(1,10)
         random_surface_y = random.randint(1,10)
-        
-        AI_coordinates = (random_surface_x,random_surface_y,0)
-        if AI_coordinates == Player["Submarine"][0] or Player["Submarine"][1] or Player["Submarine"][2]:
-            Player["Player Underwater"][row][column]["Presence"] = "HIT"
-            invalid_button = Button(redraw_gameboard, 
-                   height = 2,
-                   width = 4,
-                   command = already_shot(), 
-                   bg = 'red')
-            
-            invalid_button.configure(state=DISABLED)
-            AI_player_turn()
-            
         
 #def AI_shoot():
     
