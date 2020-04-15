@@ -1577,6 +1577,10 @@ def hit_shot():
     print (messagebox.showinfo("HIT!", "Nice shot! AI Turn"))
 def hit_missed():
     print (messagebox.showinfo("MISSED!", "Better Luck Next time! AI Turn"))
+def AI_hit():
+    print (messagebox.showinfo("HIT!", "AI managed to hit you! AI Turn"))
+def AI_hit_missed():
+    print (messagebox.showinfo("MISSED!", "AI did not hit you! your Turn"))
     
 def shoot(row, column, depth):
     global redraw_gameboard
@@ -1599,7 +1603,7 @@ def shoot(row, column, depth):
                    command = already_shot(), 
                    bg = 'red')
             
-            invalid_button.configure(state=DISABLED)
+            AI_player["AI Surface"][row][column].configure(state=DISABLED)
             AI_player_turn()
         
         else:
@@ -1618,15 +1622,18 @@ def shoot(row, column, depth):
     else:
         if (row,column,0) == AI_player["Submarine"][0] or AI_player["Submarine"][1] or AI_player["Submarine"][2]:
             AI_player["AI Underwater"][row][column]["Presence"] = "HIT"
-            invalid_button = Button(redraw_gameboard, 
+            hit_shot()
+            AI_player["AI Underwater"][row][column] = Button(redraw_gameboard, 
                    height = 2,
                    width = 4,
                    command = already_shot(), 
                    bg = 'red')
             
-            invalid_button.configure(state=DISABLED)
+            AI_player["AI Underwater"][row][column].configure(state=DISABLED)
             AI_player_turn()
+            
         else:
+            hit_missed()
             AI_player["AI Underwater"][row][column]["Presence"] = "HIT"
             AI_player["AI Underwater"][row][column] = Button(redraw_gameboard,
                    height = 2,
@@ -1642,39 +1649,64 @@ def AI_player_turn():
     global redraw_gameboard
     global Player
     global AI_player
+    global player_underwater_cell
+    global player_surface_cell
+    global AI_underwater_cell
+    global AI_surface_cell
     
     random_surface = random.randint(0,1)
     
     if random_surface == 0:
         random_surface_x = random.randint(1,10)
         random_surface_y = random.randint(1,10)
+        AI_underwater_coordinates = (random_surface_x,random_surface_y,0)
         
-        AI_coordinates = (random_surface_x,random_surface_y,0)
-        if AI_coordinates == Player["Submarine"][0] or Player["Submarine"][1] or Player["Submarine"][2]:
-            Player["Player Underwater"][row][column]["Presence"] = "HIT"
-            invalid_button = Button(redraw_gameboard, 
+        if Player["AI Underwater"][random_surface_x][random_surface_y]["Presence"] == "HIT":
+            print ("Bot Thinking...")
+            AI_player_turn()
+        
+        if AI_underwater_coordinates == Player["Submarine"][0] or Player["Submarine"][1] or Player["Submarine"][2]:
+            #referee()
+            AI_hit()
+            Player["Player Underwater"][random_surface_x][random_surface_y]["Presence"] = "HIT"
+            Player["Player Underwater"][random_surface_x][random_surface_y] = Button(redraw_gameboard, 
                    height = 2,
                    width = 4,
                    command = already_shot(), 
                    bg = 'red')
             
-            invalid_button.configure(state=DISABLED)
+            Player["Player Underwater"][random_surface_x][random_surface_y].configure(state=DISABLED)
             AI_player_turn()
+        else:
+            AI_hit_missed()
+            Player["Player Underwater"][random_surface_x][random_surface_y]["Presence"] = "HIT"
             
-        
-#def AI_shoot():
-    
-    
-""" 
-def referee():
-    if Player["AI Underwater"][i][j]["Presence"] == False:
-        AI_player["AI Underwater"][i][j]["Presence"] = True
-    
     else:
-        AI_player["AI Underwater"][i][j]["Presence"] = False
+        random_underwater_x = random.randint(12,21)
+        random_underwater_y = random.randint(12,21)
+        AI_surface_coordinates = (random_underwater_x,random_underwater_y,1)
         
-"""   
+        if Player["AI Underwater"][random_underwater_x][random_underwater_y]["Presence"] == "HIT":
+            print ("Bot Thinking...")
+            AI_player_turn()
         
+        
+        if AI_surface_coordinates == Player["Carrier"][0] or Player["Carrier"][1] or Player["Carrier"][2] or Player["Carrier"][3]:
+            AI_hit()
+            Player["Player Surface"][random_underwater_x][random_underwater_y]["Presence"] = "HIT"
+            Player["Player Surface"][random_underwater_x][random_underwater_y] = Button(redraw_gameboard,
+                  height = 2,
+                  width = 4,
+                  command = already_shot(), 
+                  bg = 'red')
+            
+            Player["Player Surface"][random_underwater_x][random_underwater_y].configure(state=DISABLED)
+        else:
+            AI_hit_missed()
+            Player["Player Surface"][random_underwater_x][random_underwater_y]["Presence"] = "HIT"
+            
+
+
 main_account_screen()
 
 
