@@ -148,7 +148,7 @@ def draw_new_button_hit(row, column):
                         command= already_shot,
                         bg = '#FF0000')
     
-    new_button.grid(row = row, column = column, bg = '#FF0000')
+    new_button.grid(row = row, column = column)
 
 
 def draw_new_button_miss(row, column):
@@ -167,7 +167,7 @@ def draw_new_button_miss(row, column):
                         command= already_shot,
                         bg = '#000000')
     
-    new_button.grid(row = row, column = column, bg = '#000000')
+    new_button.grid(row = row, column = column)
     
 def shoot(row, column, depth):
     global redraw_gameboard
@@ -227,14 +227,14 @@ def shoot(row, column, depth):
             
         else:
             
-            if (row,column,0) == AI_player["Submarine"][0] or AI_player["Submarine"][1] or AI_player["Submarine"][2]:
+            if (row,column,0) == AI_player["Submarine"][0] :
                 AI_player["AI Underwater"][row][column]["Presence"] = "HIT"
                 hit_shot()
                 draw_new_button_hit(row, column)
                 
                 AI_player_turn()
             
-            elif (row,column,0) == AI_player["Submarine"][1] or AI_player["Submarine"][2]:
+            elif (row,column,0) == AI_player["Submarine"][1]:
                 AI_player["AI Underwater"][row][column]["Presence"] = "HIT"
                 hit_shot()
                 draw_new_button_hit(row, column)

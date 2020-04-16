@@ -1682,7 +1682,7 @@ def shoot(row, column, depth):
             
         else:
             
-            if (row,column,0) == AI_player["Submarine"][0]:
+            if (row,column,0) == AI_player["Submarine"][0] :
                 AI_player["AI Underwater"][row][column]["Presence"] = "HIT"
                 hit_shot()
                 draw_new_button_hit(row, column)
@@ -1735,7 +1735,7 @@ def AI_player_turn():
         elif AI_underwater_coordinates == Player["Submarine"][0]:
             #referee()
             
-            Player["Player Underwater"][random_underwater_x][random_underwater_x]["Presence"] = "HIT"
+            Player["Player Underwater"][random_underwater_x][random_underwater_y]["Presence"] = "HIT"
             draw_new_button_hit(row, column)
             AI_hit()
             
@@ -1744,19 +1744,19 @@ def AI_player_turn():
         elif AI_underwater_coordinates == Player["Submarine"][1]:
             
             AI_hit()
-            Player["Player Underwater"][random_underwater_x][random_underwater_x]["Presence"] = "HIT"
+            Player["Player Underwater"][random_underwater_x][random_underwater_y]["Presence"] = "HIT"
             draw_new_button_hit(row, column)
             
 
         elif AI_underwater_coordinates == Player["Submarine"][2]:
             AI_hit()
-            Player["Player Underwater"][random_underwater_x][random_underwater_x]["Presence"] = "HIT"
+            Player["Player Underwater"][random_underwater_x][random_underwater_y]["Presence"] = "HIT"
             draw_new_button_hit(row, column)
             
             
         else:
             AI_hit_missed()
-            Player["Player Underwater"][random_underwater_x][random_underwater_x]["Presence"] = "HIT"
+            Player["Player Underwater"][random_underwater_x][random_underwater_y]["Presence"] = "HIT"
             draw_new_button_miss(row, column)
             
     else:
@@ -1801,8 +1801,6 @@ def AI_player_turn():
                   command = AI_commandless, 
                   bg = 'black')
             draw_new_button_miss(row, column)
-            
-
 
 main_account_screen()
 
