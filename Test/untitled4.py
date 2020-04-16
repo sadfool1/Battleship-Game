@@ -132,7 +132,8 @@ def AI_hit_missed():
 def AI_commandless():
     pass
 
-def shoot(row, column, depth):
+def draw_new_button_hit(row, column):
+    
     global redraw_gameboard
     global Player
     global AI_player
@@ -141,8 +142,42 @@ def shoot(row, column, depth):
     global AI_underwater_cell
     global AI_surface_cell
     
-
+    new_button = Button(redraw_gameboard, 
+                        height = 2, 
+                        width = 4, 
+                        command= already_shot,
+                        bg = '#FF0000')
     
+    new_button.grid(row = row, column = column)
+
+
+def draw_new_button_miss(row, column):
+    
+    global redraw_gameboard
+    global Player
+    global AI_player
+    global player_underwater_cell
+    global player_surface_cell
+    global AI_underwater_cell
+    global AI_surface_cell
+    
+    new_button = Button(redraw_gameboard, 
+                        height = 2, 
+                        width = 4, 
+                        command= already_shot,
+                        bg = '#000000')
+    
+    new_button.grid(row = row, column = column)
+    
+def shoot(row, column, depth):
+    global redraw_gameboard
+    global Player
+    global AI_player
+    global player_underwater_cell
+    global player_surface_cell
+    global AI_underwater_cell
+    global AI_surface_cell
+        
     if depth == 1: #means AI_surface
         while AI_player["AI Surface"][row][column]["Presence"] == "HIT":
             already_shot()
@@ -152,16 +187,13 @@ def shoot(row, column, depth):
             if (row,column,1) == AI_player["Carrier"][0]:
                 AI_player["AI Surface"][row][column]["Presence"] = "HIT"
                 hit_shot()
-                
-                redraw_gameboard.grid(row = row, column = column, state = DISABLED, bg = "red")
-                
+                draw_new_button_hit(row, column)
                 AI_player_turn()
                 
             elif (row,column,1) == AI_player["Carrier"][1]:
                 AI_player["AI Surface"][row][column]["Presence"] = "HIT"
                 hit_shot()
-                
-                redraw_gameboard.configure(row = row, column = column, state = DISABLED, fill = "red")
+                draw_new_button_hit(row, column)
                 
                 AI_player_turn()
                 
@@ -169,7 +201,7 @@ def shoot(row, column, depth):
                 AI_player["AI Surface"][row][column]["Presence"] = "HIT"
                 hit_shot()
                 
-                redraw_gameboard.configure(row = row, column = column, state = DISABLED, bg = "red")
+                draw_new_button_hit(row, column)
                 AI_player_turn()
             
             elif (row,column,1) == AI_player["Carrier"][2]:
@@ -185,41 +217,41 @@ def shoot(row, column, depth):
                 AI_player["AI Surface"][row][column]["Presence"] = "HIT"
                 hit_missed()
                 
-                redraw_gameboard.configure(row = row, column = column, state = DISABLED, bg = 'blue')
+                draw_new_button_miss(row, column)
                 AI_player_turn()
                     
     else:
         while AI_player["AI Underwater"][row][column]["Presence"] == "HIT":
             already_shot()
-            time.sleep(10)
+            break
             
         else:
             
             if (row,column,0) == AI_player["Submarine"][0] or AI_player["Submarine"][1] or AI_player["Submarine"][2]:
                 AI_player["AI Underwater"][row][column]["Presence"] = "HIT"
                 hit_shot()
-                redraw_gameboard.configure(row = row, column = column, state = DISABLED, bg = 'red')
+                draw_new_button_hit(row, column)
                 
                 AI_player_turn()
             
             elif (row,column,0) == AI_player["Submarine"][1] or AI_player["Submarine"][2]:
                 AI_player["AI Underwater"][row][column]["Presence"] = "HIT"
                 hit_shot()
-                redraw_gameboard.configure(row = row, column = column, state = DISABLED, bg = 'red')
+                draw_new_button_hit(row, column)
                 
                 AI_player_turn()
             
             elif (row,column,0) == AI_player["Submarine"][2]:
                 AI_player["AI Underwater"][row][column]["Presence"] = "HIT"
                 hit_shot()
-                redraw_gameboard.configure(row = row, column = column, state = DISABLED, bg = 'red')
+                draw_new_button_hit(row, column)
                 AI_player_turn()
                 
                 
             else:
                 hit_missed()
                 AI_player["AI Underwater"][row][column]["Presence"] = "HIT"
-                redraw_gameboard.configure(Button)
+                draw_new_button_miss(row, column)
                 AI_player_turn()
  
 
@@ -238,6 +270,8 @@ def AI_player_turn():
         random_underwater_x = random.randint(1,10)
         random_underwater_y = random.randint(0,9)
         AI_underwater_coordinates = (random_underwater_x,random_underwater_y,0)
+        row = random_underwater_x
+        column = random_underwater_y
 
         if Player["Player Underwater"][random_underwater_x][random_underwater_y]["Presence"] == "HIT":
             print ("Bot Thinking...")
@@ -245,56 +279,38 @@ def AI_player_turn():
         
         elif AI_underwater_coordinates == Player["Submarine"][0]:
             #referee()
-            AI_hit()
-            Player["Player Underwater"][random_underwater_x][random_underwater_x]["Presence"] = "HIT"
-            Player["Player Underwater"][random_underwater_x][random_underwater_x] = Button(redraw_gameboard, 
-                   height = 2,
-                   width = 4,
-                   command = AI_commandless, 
-                   bg = 'red')
             
-            player_underwater_cell[random_underwater_x][random_underwater_y].configure(bg='red')
+            Player["Player Underwater"][random_underwater_x][random_underwater_x]["Presence"] = "HIT"
+            draw_new_button_hit(row, column)
+            AI_hit()
+            
             
             
         elif AI_underwater_coordinates == Player["Submarine"][1]:
             
             AI_hit()
             Player["Player Underwater"][random_underwater_x][random_underwater_x]["Presence"] = "HIT"
-            Player["Player Underwater"][random_underwater_x][random_underwater_x] = Button(redraw_gameboard, 
-                   height = 2,
-                   width = 4,
-                   command = AI_commandless, 
-                   bg = 'red')
-            
-            player_underwater_cell[random_underwater_x][random_underwater_y].configure(bg='red')
+            draw_new_button_hit(row, column)
             
 
         elif AI_underwater_coordinates == Player["Submarine"][2]:
-            
             AI_hit()
             Player["Player Underwater"][random_underwater_x][random_underwater_x]["Presence"] = "HIT"
-            Player["Player Underwater"][random_underwater_x][random_underwater_x] = Button(redraw_gameboard, 
-                   height = 2,
-                   width = 4,
-                   command = AI_commandless, 
-                   bg = 'red')
-            player_underwater_cell[random_underwater_x][random_underwater_y].configure(bg='red')
+            draw_new_button_hit(row, column)
             
             
         else:
             AI_hit_missed()
             Player["Player Underwater"][random_underwater_x][random_underwater_x]["Presence"] = "HIT"
-            Player["Player Underwater"][random_underwater_x][random_underwater_x] = Button(redraw_gameboard, 
-                   height = 2,
-                   width = 4,
-                   command = AI_commandless, 
-                   bg = 'black')
-            player_underwater_cell[random_underwater_x][random_underwater_y].configure(bg='black')
+            draw_new_button_miss(row, column)
             
     else:
         random_surface_x = random.randint(1,10)
         random_surface_y = random.randint(11,20)
         AI_surface_coordinates = (random_surface_x,random_surface_y,1)
+        
+        row = random_surface_x
+        column = random_surface_y
         
         if Player["Player Surface"][random_surface_x][random_surface_y]["Presence"] == "HIT":
             print ("Bot Thinking...")
@@ -304,42 +320,22 @@ def AI_player_turn():
         elif AI_surface_coordinates == Player["Carrier"][0]:
             AI_hit()
             Player["Player Surface"][random_surface_x][random_surface_y]["Presence"] = "HIT"
-            Player["Player Surface"][random_surface_x][random_surface_y] = Button(redraw_gameboard,
-                  height = 2,
-                  width = 4,
-                  command = AI_commandless, 
-                  bg = 'red')
-            player_surface_cell[random_surface_x][random_surface_y].configure(bg='red')
+            draw_new_button_hit(row, column)
             
         elif AI_surface_coordinates == Player["Carrier"][1]:
             AI_hit()
             Player["Player Surface"][random_surface_x][random_surface_y]["Presence"] = "HIT"
-            Player["Player Surface"][random_surface_x][random_surface_y] = Button(redraw_gameboard,
-                  height = 2,
-                  width = 4,
-                  command = AI_commandless, 
-                  bg = 'red')
-            player_surface_cell[random_surface_x][random_surface_y].configure(bg='red')
+            draw_new_button_hit(row, column)
             
         elif AI_surface_coordinates == Player["Carrier"][2]:
             AI_hit()
             Player["Player Surface"][random_surface_x][random_surface_y]["Presence"] = "HIT"
-            Player["Player Surface"][random_surface_x][random_surface_y] = Button(redraw_gameboard,
-                  height = 2,
-                  width = 4,
-                  command = AI_commandless, 
-                  bg = 'red')
-            player_surface_cell[random_surface_x][random_surface_y].configure(bg='red')
+            draw_new_button_hit(row, column)
             
         elif AI_surface_coordinates == Player["Carrier"][3]:
             AI_hit()
             Player["Player Surface"][random_surface_x][random_surface_y]["Presence"] = "HIT"
-            Player["Player Surface"][random_surface_x][random_surface_y] = Button(redraw_gameboard,
-                  height = 2,
-                  width = 4,
-                  command = AI_commandless, 
-                  bg = 'red')
-            player_surface_cell[random_surface_x][random_surface_y].configure(bg='red')
+            draw_new_button_hit(row, column)
             
         else:
             AI_hit_missed()
@@ -349,7 +345,5 @@ def AI_player_turn():
                   width = 4,
                   command = AI_commandless, 
                   bg = 'black')
-            player_surface_cell[random_surface_x][random_surface_y].configure(bg='black')
+            draw_new_button_miss(row, column)
             
-
-redraw_boards()
