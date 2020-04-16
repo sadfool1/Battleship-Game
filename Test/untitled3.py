@@ -1,3 +1,11 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+Created on Thu Apr 16 14:44:00 2020
+
+@author: jameselijah
+"""
+
 '''
 Program Name: battleship_game_no_self_import
 
@@ -1510,7 +1518,7 @@ def redraw_boards():
     
     Label(redraw_gameboard, text="Player Underwater", height = 3, width = 40).grid(row=0, column=0, columnspan=10)
     Label(redraw_gameboard, text="Player Surface", height = 3, width = 40).grid(row=0, column=12, columnspan=10)
-    
+
     # Preparing a spacing between the two grids
     Label(redraw_gameboard, text="", height = 20, width = 4).grid(row=1, column=10, rowspan=10)
     
@@ -1585,6 +1593,7 @@ def AI_commandless():
     pass
 
 def shoot(row, column, depth):
+    
     global redraw_gameboard
     global Player
     global AI_player
@@ -1600,8 +1609,9 @@ def shoot(row, column, depth):
         if AI_player["AI Surface"][row][column]["Presence"] == "HIT":
             already_shot()
             
+            
         
-        if (row,column,1) == AI_player["Carrier"][0] or AI_player["Carrier"][1] or AI_player["Carrier"][2] or AI_player["Carrier"][2]:
+        if (row,column,1) == AI_player["Carrier"][0]:
             AI_player["AI Surface"][row][column]["Presence"] = "HIT"
             hit_shot()
             
@@ -1611,8 +1621,49 @@ def shoot(row, column, depth):
                    command = already_shot, 
                    bg = 'red')
             
-            AI_player["AI Surface"][row][column].configure(bg='red')
+            AI_surface_cell[row][row].configure(bg='red')
             AI_player_turn()
+            
+        elif (row,column,1) == AI_player["Carrier"][1]:
+            AI_player["AI Surface"][row][column]["Presence"] = "HIT"
+            hit_shot()
+            
+            AI_player["AI Surface"][row][column] = Button(redraw_gameboard, 
+                   height = 2, 
+                   width = 4, 
+                   command = already_shot, 
+                   bg = 'red')
+            
+            AI_surface_cell[row][row].configure(bg='red')
+            AI_player_turn()
+            
+        elif (row,column,1) == AI_player["Carrier"][2]:
+            AI_player["AI Surface"][row][column]["Presence"] = "HIT"
+            hit_shot()
+            
+            AI_player["AI Surface"][row][column] = Button(redraw_gameboard, 
+                   height = 2, 
+                   width = 4, 
+                   command = already_shot, 
+                   bg = 'red')
+            
+            AI_surface_cell[row][row].configure(bg='red')
+            AI_player_turn()
+        
+        elif (row,column,1) == AI_player["Carrier"][2]:
+            AI_player["AI Surface"][row][column]["Presence"] = "HIT"
+            hit_shot()
+            
+            AI_player["AI Surface"][row][column] = Button(redraw_gameboard, 
+                   height = 2, 
+                   width = 4, 
+                   command = already_shot, 
+                   bg = 'red')
+            
+            AI_surface_cell[row][row].configure(bg='red')
+            AI_player_turn()
+            
+
         
         else:
             AI_player["AI Surface"][row][column]["Presence"] = "HIT"
@@ -1624,7 +1675,7 @@ def shoot(row, column, depth):
                    command = already_shot, 
                    bg = 'black')
             
-            AI_player["AI Surface"][row][column].configure(state=DISABLED)
+            AI_surface_cell[row][row].configure(bg='black')
             AI_player_turn()
                     
     else:
@@ -1637,8 +1688,33 @@ def shoot(row, column, depth):
                    command = already_shot, 
                    bg = 'red')
             
-            AI_player["AI Underwater"][row][column].configure(state=DISABLED)
+            AI_underwater_cell[row][column].configure(bg='red')
             AI_player_turn()
+        
+        elif (row,column,0) == AI_player["Submarine"][1] or AI_player["Submarine"][2]:
+            AI_player["AI Underwater"][row][column]["Presence"] = "HIT"
+            hit_shot()
+            AI_player["AI Underwater"][row][column] = Button(redraw_gameboard, 
+                   height = 2,
+                   width = 4,
+                   command = already_shot, 
+                   bg = 'red')
+            
+            AI_underwater_cell[row][column].configure(bg='red')
+            AI_player_turn()
+        
+        elif (row,column,0) == AI_player["Submarine"][2]:
+            AI_player["AI Underwater"][row][column]["Presence"] = "HIT"
+            hit_shot()
+            AI_player["AI Underwater"][row][column] = Button(redraw_gameboard, 
+                   height = 2,
+                   width = 4,
+                   command = already_shot, 
+                   bg = 'red')
+            
+            AI_underwater_cell[row][column].configure(bg='red')
+            AI_player_turn()
+            
             
         else:
             hit_missed()
@@ -1649,7 +1725,7 @@ def shoot(row, column, depth):
                    command = hit_missed, 
                    bg = 'black')
             
-            AI_player["AI Underwater"][row][column].configure(state=DISABLED)
+            AI_underwater_cell[row][column].configure(bg='black')
             AI_player_turn()
  
 
@@ -1683,6 +1759,9 @@ def AI_player_turn():
                    command = AI_commandless, 
                    bg = 'red')
             
+            player_underwater_cell[random_underwater_x][random_underwater_y].configure(bg='red')
+            
+            
         elif AI_underwater_coordinates == Player["Submarine"][1]:
             
             AI_hit()
@@ -1693,6 +1772,7 @@ def AI_player_turn():
                    command = AI_commandless, 
                    bg = 'red')
             
+            player_underwater_cell[random_underwater_x][random_underwater_y].configure(bg='red')
             
 
         elif AI_underwater_coordinates == Player["Submarine"][2]:
@@ -1704,8 +1784,8 @@ def AI_player_turn():
                    width = 4,
                    command = AI_commandless, 
                    bg = 'red')
+            player_underwater_cell[random_underwater_x][random_underwater_y].configure(bg='red')
             
-            Player["Player Underwater"][random_underwater_x][random_underwater_x].configure(state=DISABLED)
             
         else:
             AI_hit_missed()
@@ -1715,6 +1795,7 @@ def AI_player_turn():
                    width = 4,
                    command = AI_commandless, 
                    bg = 'black')
+            player_underwater_cell[random_underwater_x][random_underwater_y].configure(bg='black')
             
     else:
         random_surface_x = random.randint(1,10)
@@ -1734,6 +1815,8 @@ def AI_player_turn():
                   width = 4,
                   command = AI_commandless, 
                   bg = 'red')
+            player_surface_cell[random_surface_x][random_surface_y].configure(bg='red')
+            
         elif AI_surface_coordinates == Player["Carrier"][1]:
             AI_hit()
             Player["Player Surface"][random_surface_x][random_surface_y]["Presence"] = "HIT"
@@ -1742,6 +1825,8 @@ def AI_player_turn():
                   width = 4,
                   command = AI_commandless, 
                   bg = 'red')
+            player_surface_cell[random_surface_x][random_surface_y].configure(bg='red')
+            
         elif AI_surface_coordinates == Player["Carrier"][2]:
             AI_hit()
             Player["Player Surface"][random_surface_x][random_surface_y]["Presence"] = "HIT"
@@ -1750,6 +1835,7 @@ def AI_player_turn():
                   width = 4,
                   command = AI_commandless, 
                   bg = 'red')
+            player_surface_cell[random_surface_x][random_surface_y].configure(bg='red')
             
         elif AI_surface_coordinates == Player["Carrier"][3]:
             AI_hit()
@@ -1759,6 +1845,7 @@ def AI_player_turn():
                   width = 4,
                   command = AI_commandless, 
                   bg = 'red')
+            player_surface_cell[random_surface_x][random_surface_y].configure(bg='red')
             
         else:
             AI_hit_missed()
@@ -1768,6 +1855,7 @@ def AI_player_turn():
                   width = 4,
                   command = AI_commandless, 
                   bg = 'black')
+            player_surface_cell[random_surface_x][random_surface_y].configure(bg='black')
             
 
 
