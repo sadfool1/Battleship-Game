@@ -148,7 +148,7 @@ def draw_new_button_hit(row, column):
                         command= already_shot,
                         bg = '#FF0000')
     
-    new_button.grid(row = row, column = column)
+    new_button.grid(row = row, column = column, bg = '#FF0000')
 
 
 def draw_new_button_miss(row, column):
@@ -167,7 +167,7 @@ def draw_new_button_miss(row, column):
                         command= already_shot,
                         bg = '#000000')
     
-    new_button.grid(row = row, column = column)
+    new_button.grid(row = row, column = column, bg = '#000000')
     
 def shoot(row, column, depth):
     global redraw_gameboard
@@ -346,4 +346,5 @@ def AI_player_turn():
                   command = AI_commandless, 
                   bg = 'black')
             draw_new_button_miss(row, column)
-            
+
+redraw_boards()

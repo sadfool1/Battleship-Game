@@ -1682,14 +1682,14 @@ def shoot(row, column, depth):
             
         else:
             
-            if (row,column,0) == AI_player["Submarine"][0] or AI_player["Submarine"][1] or AI_player["Submarine"][2]:
+            if (row,column,0) == AI_player["Submarine"][0]:
                 AI_player["AI Underwater"][row][column]["Presence"] = "HIT"
                 hit_shot()
                 draw_new_button_hit(row, column)
                 
                 AI_player_turn()
             
-            elif (row,column,0) == AI_player["Submarine"][1] or AI_player["Submarine"][2]:
+            elif (row,column,0) == AI_player["Submarine"][1]:
                 AI_player["AI Underwater"][row][column]["Presence"] = "HIT"
                 hit_shot()
                 draw_new_button_hit(row, column)
