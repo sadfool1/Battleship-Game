@@ -16,17 +16,14 @@ functions from other python files.
 This is really long, so be prepared.
 '''
 
-import tkinter as tk # imports all names from tkinter as tk
-from tkinter import * # to import all names from tkinter
+import tkinter as tk 
+from tkinter import *
 
-# Note: It is assumed that both importing methods are used in the code.
 
-from tkinter import messagebox # for pop-up messages as part of the verification
+from tkinter import messagebox 
 
-# AddNote: messagebox function doesn't seem to work without this line
-
-import os # importing support for different operating systems
-from random import randint # importing random module to generate random number
+import os 
+from random import randint
 import random
 import time
 

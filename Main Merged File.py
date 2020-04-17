@@ -1001,6 +1001,3 @@ def AI_player_turn():
             draw_new_button_miss(row, column)
 
 main_account_screen()
-
-
-        
