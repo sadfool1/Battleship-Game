@@ -204,10 +204,48 @@ def player_scatter_shot_underwater(row, column):
             
             
 def boundary_shots(row, column):
+    shots  = [(row,column), (row+1, column), (row+1, column +1), (row, column +1), (row, column -1), (row+1, column)]
+    
+    """
+    for i in range(len(shots)):
+        if shots[i] == AI_player["Carrier"][0]:
+            hit_shot()
+            draw_new_button_hit(shots[i], shots[i])
+            AI_player["AI Surface"][shots[i][0]][shots[i][1]]["Presence"] = "HIT"
+    """
+    
+    if row  < 10 and column < 10:
+        """
+        Build corner shot for player underwater
+        """
+    
+    elif row > 10 and column < 10:
+        """
+        Build corner shot for AI underwater
+        """
+        pass
+    
+    elif row < 10 and column > 10:
+        """
+        Build corner shot for player surface
+        """
+        
+    elif row > 10 and column > 10:
+        """
+        Build corner shot for player underwater
+        """
     pass
 
 def corner_shot(row, column):
     shots  = [(row,column), (row+1, column), (row+1, column +1), (row, column +1)]
+    
+    """
+    for i in range(len(shots)):
+        if shots[i] == AI_player["Carrier"][0]:
+            hit_shot()
+            draw_new_button_hit(shots[i], shots[i])
+            AI_player["AI Surface"][shots[i][0]][shots[i][1]]["Presence"] = "HIT"
+    """
     
     if row  < 10 and column < 10:
         """
@@ -216,17 +254,19 @@ def corner_shot(row, column):
         pass
     elif row > 10 and column < 10:
         """
-        Build corner shot for player underwater
+        Build corner shot for AI underwater
         """
         pass
-        
     
-    for i in range(len(shots)):
-        if shots[i] == AI_player["Carrier"][0]:
-            hit_shot()
-            draw_new_button_hit(shots[i], shots[i])
-            AI_player["AI Surface"][shots[i][0]][shots[i][1]]["Presence"] = "HIT"
+    elif row < 10 and column > 10:
+        """
+        Build corner shot for player surface
+        """
         
+    elif row > 10 and column > 10:
+        """
+        Build corner shot for player underwater
+        """
     
     
 def scatter_shot_surface(row, column):    
