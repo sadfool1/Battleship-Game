@@ -15,15 +15,23 @@ functions from other python files.
 
 This is really long, so be prepared.
 '''
+
 import tkinter as tk 
 from tkinter import *
+
+
 from tkinter import messagebox 
+
 import os 
 from random import randint
 import random
+import time
 
 Player = {'Carrier':[(3, 2, 1), (4, 2, 1), (5, 2, 1), (6, 2, 1)], 'Submarine': [(4, 10, 0), (5, 10, 0), (6, 10, 0)]}
-AI_player = {'Carrier':[(12,12,1), (12,13,1), (12,14,1), (12,15,1)], 'Submarine': [(0,12,0), (0,13,0), (0,14,0), (0,15,0)]}
+AI_player = {'Carrier':[(12,12,1), (12,13,1), (12,14,1)], 'Submarine': [(0,12,0), (0,13,0), (0,14,0), (0,15,0)]}
+
+color="red"
+default_color="white"
 
 def redraw_boards():
     global redraw_gameboard
@@ -57,6 +65,7 @@ def redraw_boards():
     Label(redraw_gameboard, text="AI Surface", height = 3, width = 40).grid(row=11, column=11, columnspan=10)
     Label(redraw_gameboard, text="", height = 4, width = 1).grid(row=11, column=0, columnspan=10)
 
+    last_clicked = [None]
     
     for i in range(1, 11):
         Player["Player Underwater"][i] = {}
@@ -66,8 +75,7 @@ def redraw_boards():
             player_underwater_cell = Button(redraw_gameboard, 
                                             height = 2, 
                                             width = 4, 
-                                            command=cannot_shoot,
-                                            highlightbackground='white')
+                                            command=cannot_shoot)
             player_underwater_cell.grid(row=i, column=j)
             
     for i in range(1, 11):
@@ -78,8 +86,7 @@ def redraw_boards():
             player_surface_cell = Button(redraw_gameboard, 
                                          height = 2, 
                                          width = 4, 
-                                         command=cannot_shoot,
-                                         highlightbackground='white')
+                                         command=cannot_shoot)
             player_surface_cell.grid(row=i, column=j) 
             
     for i in range(12, 22):
@@ -89,10 +96,10 @@ def redraw_boards():
             AI_player["AI Underwater"][i][j]["Presence"] = None
             AI_underwater_cell = Button(redraw_gameboard, 
                                         height = 2, 
-                                        width = 4,
-                                        highlightbackground='white',
-                                        command=lambda row=i, column=j, depth = 0: shoot(row, column, depth))
+                                        width = 4)
             AI_underwater_cell.grid(row=i, column=j)
+            AI_underwater_cell["command"] = lambda AI_underwater_cell = AI_underwater_cell, depth = 1: shoot(AI_underwater_cell, depth, last_clicked)
+
     
     for i in range(12, 22):
         AI_player["AI Surface"][i] = {}
@@ -101,12 +108,9 @@ def redraw_boards():
             AI_player["AI Surface"][i][j]["Presence"] = None
             AI_surface_cell = Button(redraw_gameboard, 
                                      height = 2, 
-                                     width = 4, 
-                                     highlightbackground='white',
-                                     command=lambda row=i, column=j, depth = 1: shoot(row, column, depth))
-            
-            AI_surface_cell.grid(row=i, column=j)
-            
+                                     width = 4)
+            AI_surface_cell.grid(row=i, column=j) 
+            AI_surface_cell["command"] = lambda AI_surface_cell = AI_surface_cell, depth = 1: shoot(AI_surface_cell, depth, last_clicked)
     
 
     redraw_gameboard.mainloop()
@@ -141,7 +145,7 @@ def draw_new_button_hit(row, column):
                         height = 2, 
                         width = 4, 
                         command= already_shot,
-                        highlightbackground='red')
+                        bg = '#FF0000')
     
     new_button.grid(row = row, column = column)
 
@@ -160,97 +164,11 @@ def draw_new_button_miss(row, column):
                         height = 2, 
                         width = 4, 
                         command= already_shot,
-                        highlightbackground='black')
+                        bg = '#000000')
     
     new_button.grid(row = row, column = column)
     
-"""    
-def check_for_hits():
-    global redraw_gameboard
-    global Player
-    global AI_player
-    
-    if 
-"""
-
-
-    
-def player_scatter_shot_underwater(row, column):
-    
-    global redraw_gameboard
-    global Player
-    global AI_player
-    
-    shots = [(row-1,column-1), (row+1, column+1), (row, column+1), (row, column-1), (row -1, column+2), (row +2, column-1), (row -1, column),(row + 1, column)]
-    for i in range(len(shots)):
-        if shots[i] == AI_player["Submarine"][0]:
-            hit_shot()
-            draw_new_button_hit(shots[i], shots[i])
-            AI_player["AI Underwater"][shots[i][0]][shots[i][1]]["Presence"] = "HIT"
-            
-        elif shots[i] == AI_player["Submarine"][1]:
-            hit_shot()
-            draw_new_button_hit(shots[i], shots[i])
-            AI_player["AI Underwater"][shots[i][0]][shots[i][1]]["Presence"] = "HIT"
-            
-        elif shots[i] == AI_player["Submarine"][2]:
-            hit_shot()
-            draw_new_button_hit(shots[i], shots[i])
-            AI_player["AI Underwater"][shots[i][0]][shots[i][1]]["Presence"] = "HIT"
-        else:
-            hit_missed()
-            draw_new_button_miss(shots[i], shots[i])
-            AI_player["AI Underwater"][shots[i][0]][shots[i][1]]["Presence"] = "HIT"
-            
-            
-def boundary_shots(row, column):
-    pass
-    
-def player_scatter_shot_surface(row, column):    
-    global redraw_gameboard
-    global Player
-    global AI_player
-    
-
-    shots = [(row-1,column-1), (row+1, column+1), (row, column+1), (row, column-1), (row -1, column+2), (row +2, column-1), (row -1, column),(row + 1, column)]
-
-    print ("You clicked %d row, %d column." % (row, column), end = '')
-    
-    print (shots)
-    
-    if (row,column) == (12, 1):
-        boundary_shots(row, column)
-    
-        
-
-    for i in range(len(shots)):
-        if shots[i] == AI_player["Carrier"][0]:
-            hit_shot()
-            draw_new_button_hit(shots[i], shots[i])
-            AI_player["AI Surface"][shots[i][0]][shots[i][1]]["Presence"] = "HIT"
-            
-        elif shots[i] == AI_player["Carrier"][1]:
-            hit_shot()
-            draw_new_button_hit(shots[i], shots[i])
-            AI_player["AI Surface"][shots[i][0]][shots[i][1]]["Presence"] = "HIT"
-            
-        elif shots[i] == AI_player["Carrier"][2]:
-            hit_shot()
-            draw_new_button_hit(shots[i], shots[i])
-            AI_player["AI Surface"][shots[i][0]][shots[i][1]]["Presence"] = "HIT"
-            
-        elif shots[i] == AI_player["Carrier"][3]:
-            hit_shot()
-            draw_new_button_hit(shots[i], shots[i])
-            AI_player["AI Surface"][shots[i][0]][shots[i][1]]["Presence"] = "HIT"
-        
-        else:
-            hit_missed()
-            draw_new_button_miss(shots[i], shots[i])
-            AI_player["AI Surface"][shots[i][0]][shots[i][1]]["Presence"] = "HIT"
-
-    
-def shoot(row, column, depth):
+def shoot(button, depth, last_clicked):
     global redraw_gameboard
     global Player
     global AI_player
@@ -258,32 +176,72 @@ def shoot(row, column, depth):
     global player_surface_cell
     global AI_underwater_cell
     global AI_surface_cell
-    
         
     if depth == 1: #means AI_surface
-        while AI_player["AI Surface"][row][column]["Presence"] == "HIT":
-            already_shot()
-            break
+        #while AI_player["AI Surface"]["Presence"] == "HIT":
+         #   already_shot()
+         #   break
             
         else:
-            if (row,column,1) == AI_player["Carrier"][0]:
-                player_scatter_shot_surface(row, column)
+            if (button, 1) == AI_player["Carrier"][0]:
+                AI_player["AI Surface"][row][column]["Presence"] = "HIT"
+                hit_shot()
+                row, column, depth
+                last_clicked[0] = button
+                
                 AI_player_turn()
                 
-            elif (row,column,1) == AI_player["Carrier"][1]:
-                player_scatter_shot_surface(row, column)
+            elif (button,1) == AI_player["Carrier"][1]:
+                AI_player["AI Surface"][row][column]["Presence"] = "HIT"
+                hit_shot()
+                if last_clicked[0]:
+                    last_clicked[0]["bg"] = default_color
+                    last_clicked[0]["activebackground"] = default_color
+                button["bg"] = color
+                button["activebackground"] = color
+                last_clicked[0] = button
+                
                 AI_player_turn()
                 
-            elif (row,column,1) == AI_player["Carrier"][2]:
-                player_scatter_shot_surface(row, column)
+            elif (button,1) == AI_player["Carrier"][2]:
+                AI_player["AI Surface"][row][column]["Presence"] = "HIT"
+                hit_shot()
+                
+                if last_clicked[0]:
+                    last_clicked[0]["bg"] = default_color
+                    last_clicked[0]["activebackground"] = default_color
+                button["bg"] = color
+                button["activebackground"] = color
+                last_clicked[0] = button
+                
                 AI_player_turn()
             
-            elif (row,column,1) == AI_player["Carrier"][2]:
-                player_scatter_shot_surface(row, column)
+            elif (button,1) == AI_player["Carrier"][2]:
+                AI_player["AI Surface"][row][column]["Presence"] = "HIT"
+                hit_shot()
+                
+                if last_clicked[0]:
+                    last_clicked[0]["bg"] = default_color
+                    last_clicked[0]["activebackground"] = default_color
+                button["bg"] = color
+                button["activebackground"] = color
+                last_clicked[0] = button
+                
                 AI_player_turn()
+                
+    
             
             else:
-                player_scatter_shot_surface(row, column)
+                AI_player["AI Surface"][row][column]["Presence"] = "HIT"
+                hit_missed()
+                
+                if last_clicked[0]:
+                    last_clicked[0]["bg"] = default_color
+                    last_clicked[0]["activebackground"] = default_color
+                button["bg"] = color
+                button["activebackground"] = color
+                last_clicked[0] = button
+                
                 AI_player_turn()
                     
     else:
@@ -294,18 +252,50 @@ def shoot(row, column, depth):
         else:
             
             if (row,column,0) == AI_player["Submarine"][0] :
-                player_scatter_shot_underwater(row, column)
+                AI_player["AI Underwater"][row][column]["Presence"] = "HIT"
+                hit_shot()
+                if last_clicked[0]:
+                    last_clicked[0]["bg"] = default_color
+                    last_clicked[0]["activebackground"] = default_color
+                button["bg"] = color
+                button["activebackground"] = color
+                last_clicked[0] = button
+                
                 AI_player_turn()
             
             elif (row,column,0) == AI_player["Submarine"][1]:
-                player_scatter_shot_underwater(row, column)
+                AI_player["AI Underwater"][row][column]["Presence"] = "HIT"
+                hit_shot()
+                if last_clicked[0]:
+                    last_clicked[0]["bg"] = default_color
+                    last_clicked[0]["activebackground"] = default_color
+                button["bg"] = color
+                button["activebackground"] = color
+                last_clicked[0] = button
+                
                 AI_player_turn()
             
             elif (row,column,0) == AI_player["Submarine"][2]:
-                player_scatter_shot_underwater(row, column)
+                AI_player["AI Underwater"][row][column]["Presence"] = "HIT"
+                hit_shot()
+                if last_clicked[0]:
+                    last_clicked[0]["bg"] = default_color
+                    last_clicked[0]["activebackground"] = default_color
+                button["bg"] = color
+                button["activebackground"] = color
+                last_clicked[0] = button
                 AI_player_turn()
+                
+                
             else:
-                player_scatter_shot_underwater(row, column)
+                hit_missed()
+                AI_player["AI Underwater"][row][column]["Presence"] = "HIT"
+                if last_clicked[0]:
+                    last_clicked[0]["bg"] = default_color
+                    last_clicked[0]["activebackground"] = default_color
+                button["bg"] = color
+                button["activebackground"] = color
+                last_clicked[0] = button
                 AI_player_turn()
  
 
@@ -332,9 +322,13 @@ def AI_player_turn():
             AI_player_turn()
         
         elif AI_underwater_coordinates == Player["Submarine"][0]:
+            #referee()
+            
             Player["Player Underwater"][random_underwater_x][random_underwater_y]["Presence"] = "HIT"
             draw_new_button_hit(row, column)
             AI_hit()
+            
+            
             
         elif AI_underwater_coordinates == Player["Submarine"][1]:
             
