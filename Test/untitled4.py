@@ -204,7 +204,19 @@ def player_scatter_shot_underwater(row, column):
             
             
 def boundary_shots(row, column):
-    shots  = [(row,column), (row+1, column), (row+1, column +1), (row, column +1), (row, column -1), (row+1, column)]
+    shots  = [(row,column,0), 
+              (row+1, column,0), 
+              (row+1, column +1,0), 
+              (row, column +1,0), 
+              (row, column -1,0), 
+              (row+1, column,0),
+              
+              (row,column,1), 
+              (row+1, column,1), 
+              (row+1, column +1,1), 
+              (row, column +1,1), 
+              (row, column -1,1), 
+              (row+1, column,1)]
     
     """
     for i in range(len(shots)):
@@ -269,14 +281,33 @@ def corner_shot(row, column):
         """
     
     
-def scatter_shot_surface(row, column):    
+def scatter_shot(row, column):    
     global redraw_gameboard
     global Player
     global AI_player
-    shots = [(row-1,column-1), (row+1, column+1), (row, column+1), (row, column-1), (row -1, column+2), (row +2, column-1), (row -1, column),(row + 1, column)]
+    shots = [(row-1,column-1,0), 
+             (row+1, column+1,0), 
+             (row, column+1,0), 
+             (row, column-1,0), 
+             (row -1, column+2,0), 
+             (row +2, column-1,0), 
+             (row -1, column,0),
+             (row + 1, column,0), 
+             
+             (row-1,column-1,1), 
+             (row+1, column+1,1), 
+             (row, column+1,1), 
+             (row, column-1,1), 
+             (row -1, column+2,1), 
+             (row +2, column-1,1), 
+             (row -1, column,1),
+             (row + 1, column,1)]
 
-    if row >= 12:
-        if (row,column) == (12,11):
+    if row >= 12 and column >= 11: 
+        """
+        AI SURFACE
+        """
+        if (row,column) == (12,11): 
             corner_shot(12, 11)
         elif (row,column) == (12,20):
             corner_shot(12,20)
@@ -288,17 +319,17 @@ def scatter_shot_surface(row, column):
             for i in range(len(shots)):
                 if shots[i] == AI_player["Carrier"][0]:
                     hit_shot()
-                    draw_new_button_hit(shots[i], shots[i])
+                    draw_new_button_hit(shots[i][0], shots[i][0])
                     AI_player["AI Surface"][shots[i][0]][shots[i][1]]["Presence"] = "HIT"
                     
                 elif shots[i] == AI_player["Carrier"][1]:
                     hit_shot()
-                    draw_new_button_hit(shots[i], shots[i])
+                    draw_new_button_hit(shots[i][0], shots[i][0])
                     AI_player["AI Surface"][shots[i][0]][shots[i][1]]["Presence"] = "HIT"
                     
                 elif shots[i] == AI_player["Carrier"][2]:
                     hit_shot()
-                    draw_new_button_hit(shots[i], shots[i])
+                    draw_new_button_hit(shots[i][0], shots[i][1])
                     AI_player["AI Surface"][shots[i][0]][shots[i][1]]["Presence"] = "HIT"
                     
                 elif shots[i] == AI_player["Carrier"][3]:
@@ -310,7 +341,11 @@ def scatter_shot_surface(row, column):
                     hit_missed()
                     draw_new_button_miss(shots[i], shots[i])
                     AI_player["AI Surface"][shots[i][0]][shots[i][1]]["Presence"] = "HIT"
-    else:
+                    
+    elif row >= 12 and column < 10:
+        """
+        AI UNDERWATER
+        """
         if (row,column) == (1,11):
             corner_shot(1, 11)
         elif (row,column) == (1,20):
@@ -345,6 +380,47 @@ def scatter_shot_surface(row, column):
                     hit_missed()
                     draw_new_button_miss(shots[i], shots[i])
                     AI_player["AI Surface"][shots[i][0]][shots[i][1]]["Presence"] = "HIT"
+                    
+    elif row <= 10 and column <= 9:
+        """
+        Player UNDERWATER
+        """
+        if (row,column) == (1,0):
+            corner_shot(1,0)
+        elif (row,column) == (1,9):
+            corner_shot(1,9)
+        elif (row,column) == (10,9):
+            corner_shot(10,9)
+        elif (row, column) == (10,0):
+            corner_shot(10,0)
+        else:
+            for i in range(len(shots)):
+                if shots[i] == AI_player["Carrier"][0]:
+                    hit_shot()
+                    draw_new_button_hit(shots[i], shots[i])
+                    AI_player["AI Surface"][shots[i][0]][shots[i][1]]["Presence"] = "HIT"
+                    
+                elif shots[i] == AI_player["Carrier"][1]:
+                    hit_shot()
+                    draw_new_button_hit(shots[i], shots[i])
+                    AI_player["AI Surface"][shots[i][0]][shots[i][1]]["Presence"] = "HIT"
+                    
+                elif shots[i] == AI_player["Carrier"][2]:
+                    hit_shot()
+                    draw_new_button_hit(shots[i][0], shots[i][0])
+                    AI_player["AI Surface"][shots[i][0]][shots[i][1]]["Presence"] = "HIT"
+                    
+                elif shots[i] == AI_player["Carrier"][3]:
+                    hit_shot()
+                    draw_new_button_hit(shots[i][0], shots[i][0]])
+                    AI_player["AI Surface"][shots[i][0]][shots[i][1]]["Presence"] = "HIT"
+                
+                else:
+                    hit_missed()
+                    draw_new_button_miss(shots[i][0], shots[i][0])
+                    AI_player["AI Surface"][shots[i][0]][shots[i][1]]["Presence"] = "HIT"
+
+        
         
 
     
