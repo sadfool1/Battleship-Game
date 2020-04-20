@@ -23,6 +23,9 @@ from random import randint
 import random
 
 Player = {'Carrier':[(1, 11, 1), (1, 12, 1), (1, 13, 1), (1, 14, 1)], 'Submarine': [(1, 0, 0), (1, 1, 0), (1, 2, 0)]}
+
+AI_player = {'Carrier':[(12,12,1), (12,13,1), (12,14,1), (12,15,1)], 'Submarine': [(12,0,0), (12,1,0), (12,2,0)]}
+
 AI_counter = 0
 Player_counter = 0 
 
@@ -42,7 +45,7 @@ def redraw_boards():
     redraw_gameboard = Tk()
     redraw_gameboard.title("Battleship Game")
     redraw_gameboard.geometry("1080x1240")
-    redraw_gameboard.resizable(False, False)
+    redraw_gameboard.resizable(True, True)
     
     Label(redraw_gameboard, text="Player Underwater", height = 3, width = 40).grid(row=0, column=0, columnspan=10)
     Label(redraw_gameboard, text="Player Surface", height = 3, width = 40).grid(row=0, column=12, columnspan=10)
@@ -59,6 +62,7 @@ def redraw_boards():
         for j in range(10):
             Player["Player Underwater"][i][j] = {}
             Player["Player Underwater"][i][j]["Presence"] = None
+            Player["Player Underwater"][i][j]["REF"] = None
             player_underwater_cell = Button(redraw_gameboard, 
                                             height = 2, 
                                             width = 4, 
@@ -71,6 +75,7 @@ def redraw_boards():
         for j in range(11, 21):
             Player["Player Surface"][i][j] = {}
             Player["Player Surface"][i][j]["Presence"] = None
+            Player["Player Surface"][i][j]["REF"] = None
             player_surface_cell = Button(redraw_gameboard, 
                                          height = 2, 
                                          width = 4, 
@@ -83,6 +88,7 @@ def redraw_boards():
         for j in range(10):
             AI_player["AI Underwater"][i][j] = {}
             AI_player["AI Underwater"][i][j]["Presence"] = None
+            AI_player["AI Underwater"][i][j]["REF"] = None
             AI_underwater_cell = Button(redraw_gameboard, 
                                         height = 2, 
                                         width = 4,
@@ -95,6 +101,7 @@ def redraw_boards():
         for j in range(11, 21):
             AI_player["AI Surface"][i][j] = {}
             AI_player["AI Surface"][i][j]["Presence"] = None
+            AI_player["AI Surface"][i][j]["REF"] = None
             AI_surface_cell = Button(redraw_gameboard, 
                                      height = 2, 
                                      width = 4, 
@@ -106,7 +113,6 @@ def redraw_boards():
     
 
     redraw_gameboard.mainloop()
-    #referee()
 
 def cannot_shoot():
     print (messagebox.showinfo("Invalid","Cannot shoot yourself. lol :P"))
@@ -121,30 +127,52 @@ def AI_hit():
 def AI_hit_missed():
     print (messagebox.showinfo("MISSED!", "AI did not hit you! your Turn"))
 
-"""
+
 def End_prompt():
+    
+    global End_prompt
+    End_prompt = Tk()
+    End_prompt.title("You Won the Game")
+    End_prompt.geometry("250x250")
+    End_prompt.resizable(False, False)
+    
+    play_again = Button(End_prompt, 
+                        height = 2, 
+                        width = 10, 
+                        command=redraw_boards,
+                        highlightbackground='white', text = "Play Again")
+    
+    play_again.place(relx = 0, rely = 0.5, anchor = W)
+    play_again.pack()
+    
+    quit_game = Button(End_prompt, 
+                        height = 2, 
+                        width = 10, 
+                        command=quit_battleship,
+                        highlightbackground='white', text = "Quit")
+    
+    quit_game.place(relx = 1, rely = 0.5, anchor = E)
+    quit_game.pack()
+    
+    
+
+
+def play_again ():
+    global redraw_gameboard
     global End_prompt
     
-    End_prompt = Tk()
-    End_prompt.title("Battleship Game")
-    End_prompt.geometry("250x250")
-    End_prompt.resizable(True, True)
+    redraw_gameboard.destroy()
+    End_prompt.destroy()
     
-    play_again = Button(redraw_gameboard, 
-                        height = 2, 
-                        width = 4, 
-                        command=cannot_shoot,
-                        highlightbackground='white')
     
-    play_again.grid(5, 5)
+def quit_battleship():
+    global redraw_gameboard
+    global End_prompt
     
-    play_again = Button(redraw_gameboard, 
-                        height = 2, 
-                        width = 4, 
-                        command=cannot_shoot,
-                        highlightbackground='white')
+    End_prompt.destroy()
+    redraw_gameboard.destroy()
     
-"""
+    
     
 
 def draw_new_button_hit(row, column):
@@ -205,8 +233,15 @@ def top_boundary_shot(row, column):
             Player["Player Underwater"][shots[i][0]][shots[i][1]]["Presence"] = "HIT"
             if shots[i] == Player["Submarine"][0] or shots[i] == Player["Submarine"][1] or shots[i] == Player["Submarine"][2]:
                 draw_new_button_hit(shots[i][0], shots[i][1])
-                AI_counter = AI_counter + 1
                 counter = counter + 1
+                
+                if Player["Player Underwater"][shots[i][0]][shots[i][1]]["REF"] == "SHIP HIT":
+                    pass
+                else:
+                    AI_counter = AI_counter + 1
+                
+                Player["Player Underwater"][shots[i][0]][shots[i][1]]["REF"] == "SHIP HIT"
+                
             else:
                 draw_new_button_miss(shots[i][0], shots[i][1])
                 
@@ -221,9 +256,16 @@ def top_boundary_shot(row, column):
             AI_player["AI Underwater"][shots[i][0]][shots[i][1]]["Presence"] = "HIT"
             
             if shots[i] == AI_player["Submarine"][0] or shots[i] == AI_player["Submarine"][1] or shots[i] == AI_player["Submarine"][2]:
+                
                 counter = counter + 1
-                Player_counter = Player_counter + 1
                 draw_new_button_hit(shots[i][0], shots[i][1])
+                
+                if AI_player["AI Underwater"][shots[i][0]][shots[i][1]]["REF"] == "SHIP HIT":
+                    pass
+                else:
+                    Player_counter = Player_counter + 1
+                
+                AI_player["AI Underwater"][shots[i][0]][shots[i][1]]["REF"] = "SHIP HIT"
             
             else:
                 draw_new_button_miss(shots[i][0], shots[i][1])
@@ -238,9 +280,15 @@ def top_boundary_shot(row, column):
             Player["Player Surface"][shots[i][0]][shots[i][1]]["Presence"] = "HIT"
             if shots[i] == Player["Carrier"][0] or shots[i] == Player["Carrier"][1] or shots[i] == Player["Carrier"][2] or shots[i] == Player["Carrier"][3]:
                 counter = counter + 1
-                AI_counter = AI_counter + 1
-                
                 draw_new_button_hit(shots[i][0], shots[i][1])
+                
+                if Player["Player Surface"][shots[i][0]][shots[i][1]]["REF"] == "SHIP HIT":
+                    pass
+                else:
+                    AI_counter = AI_counter + 1
+                
+                Player["Player Surface"][shots[i][0]][shots[i][1]]["REF"] = "SHIP HIT"
+                
             else:
                 draw_new_button_miss(shots[i][0], shots[i][1])
         if counter > 0:
@@ -255,8 +303,14 @@ def top_boundary_shot(row, column):
             
             if shots[i] == AI_player["Carrier"][0] or shots[i] == AI_player["Carrier"][1] or shots[i] == AI_player["Carrier"][2] or shots[i] == AI_player["Carrier"][3]:
                 counter = counter + 1
-                Player_counter = Player_counter + 1
                 draw_new_button_hit(shots[i][0], shots[i][1])
+                
+                if AI_player["AI Surface"][shots[i][0]][shots[i][1]]["REF"] == "SHIP HIT":
+                    pass
+                else:
+                    Player_counter = Player_counter + 1
+                
+                AI_player["AI Surface"][shots[i][0]][shots[i][1]]["REF"] = "SHIP HIT"
             
             else:
                 draw_new_button_miss(shots[i][0], shots[i][1])
@@ -291,8 +345,15 @@ def bottom_boundary_shot(row, column):
             Player["Player Underwater"][shots[i][0]][shots[i][1]]["Presence"] = "HIT"
             if shots[i] == Player["Submarine"][0] or shots[i] == Player["Submarine"][1] or shots[i] == Player["Submarine"][2]:
                 draw_new_button_hit(shots[i][0], shots[i][1])
-                AI_counter = AI_counter + 1
                 counter = counter + 1
+                
+                if Player["Player Underwater"][shots[i][0]][shots[i][1]]["REF"] == "SHIP HIT":
+                    pass
+                else:
+                    AI_counter = AI_counter + 1
+                
+                Player["Player Underwater"][shots[i][0]][shots[i][1]]["REF"] = "SHIP HIT"
+                
             else:
                 draw_new_button_miss(shots[i][0], shots[i][1])
                 
@@ -308,11 +369,18 @@ def bottom_boundary_shot(row, column):
             
             if shots[i] == AI_player["Submarine"][0] or shots[i] == AI_player["Submarine"][1] or shots[i] == AI_player["Submarine"][2]:
                 counter = counter + 1
-                Player_counter = Player_counter + 1
                 draw_new_button_hit(shots[i][0], shots[i][1])
+
+                if AI_player["AI Underwater"][shots[i][0]][shots[i][1]]["REF"] == "SHIP HIT":
+                    pass
+                else:
+                    Player_counter = Player_counter + 1
+                
+                AI_player["AI Underwater"][shots[i][0]][shots[i][1]]["REF"] = "SHIP HIT"
             
             else:
                 draw_new_button_miss(shots[i][0], shots[i][1])
+        
         if counter > 0:
             hit_shot()
         else:
@@ -324,8 +392,15 @@ def bottom_boundary_shot(row, column):
             Player["Player Surface"][shots[i][0]][shots[i][1]]["Presence"] = "HIT"
             if shots[i] == Player["Carrier"][0] or shots[i] == Player["Carrier"][1] or shots[i] == Player["Carrier"][2] or shots[i] == Player["Carrier"][3]:
                 counter = counter + 1
-                AI_counter = AI_counter + 1
                 draw_new_button_hit(shots[i][0], shots[i][1])
+                
+                if Player["Player Surface"][shots[i][0]][shots[i][1]]["REF"] == "SHIP HIT":
+                    pass
+                else:
+                    AI_counter = AI_counter + 1
+                
+                Player["Player Surface"][shots[i][0]][shots[i][1]]["REF"] = "SHIP HIT"
+                
             else:
                 draw_new_button_miss(shots[i][0], shots[i][1])
         if counter > 0:
@@ -340,8 +415,14 @@ def bottom_boundary_shot(row, column):
             
             if shots[i] == AI_player["Carrier"][0] or shots[i] == AI_player["Carrier"][1] or shots[i] == AI_player["Carrier"][2] or shots[i] == AI_player["Carrier"][3]:
                 counter = counter + 1
-                Player_counter = Player_counter + 1
                 draw_new_button_hit(shots[i][0], shots[i][1])
+
+                if AI_player["AI Surface"][shots[i][0]][shots[i][1]]["REF"] == "SHIP HIT":
+                    pass
+                else:
+                    Player_counter = Player_counter + 1
+                
+                AI_player["AI Surface"][shots[i][0]][shots[i][1]]["REF"] = "SHIP HIT"
             
             else:
                 draw_new_button_miss(shots[i][0], shots[i][1])
@@ -376,8 +457,15 @@ def left_boundary_shot(row, column):
             Player["Player Underwater"][shots[i][0]][shots[i][1]]["Presence"] = "HIT"
             if shots[i] == Player["Submarine"][0] or shots[i] == Player["Submarine"][1] or shots[i] == Player["Submarine"][2]:
                 draw_new_button_hit(shots[i][0], shots[i][1])
-                AI_counter = AI_counter + 1
                 counter = counter + 1
+                
+                if Player["Player Underwater"][shots[i][0]][shots[i][1]]["REF"] == "SHIP HIT":
+                    pass
+                else:
+                    AI_counter = AI_counter + 1
+                
+                Player["Player Underwater"][shots[i][0]][shots[i][1]]["REF"] = "SHIP HIT"
+                
             else:
                 draw_new_button_miss(shots[i][0], shots[i][1])
                 
@@ -393,8 +481,14 @@ def left_boundary_shot(row, column):
             
             if shots[i] == AI_player["Submarine"][0] or shots[i] == AI_player["Submarine"][1] or shots[i] == AI_player["Submarine"][2]:
                 counter = counter + 1
-                Player_counter = Player_counter + 1
                 draw_new_button_hit(shots[i][0], shots[i][1])
+                
+                if AI_player["AI Underwater"][shots[i][0]][shots[i][1]]["REF"] == "SHIP HIT":
+                    pass
+                else:
+                    Player_counter = Player_counter + 1
+                
+                AI_player["AI Underwater"][shots[i][0]][shots[i][1]]["REF"] = "SHIP HIT"
             
             else:
                 draw_new_button_miss(shots[i][0], shots[i][1])
@@ -409,8 +503,15 @@ def left_boundary_shot(row, column):
             Player["Player Surface"][shots[i][0]][shots[i][1]]["Presence"] = "HIT"
             if shots[i] == Player["Carrier"][0] or shots[i] == Player["Carrier"][1] or shots[i] == Player["Carrier"][2] or shots[i] == Player["Carrier"][3]:
                 counter = counter + 1
-                AI_counter = AI_counter + 1
                 draw_new_button_hit(shots[i][0], shots[i][1])
+                
+                if Player["Player Surface"][shots[i][0]][shots[i][1]]["REF"] == "SHIP HIT":
+                    pass
+                else:
+                    AI_counter = AI_counter + 1
+                
+                Player["Player Surface"][shots[i][0]][shots[i][1]]["REF"] = "SHIP HIT"
+                
             else:
                 draw_new_button_miss(shots[i][0], shots[i][1])
         if counter > 0:
@@ -425,9 +526,15 @@ def left_boundary_shot(row, column):
             
             if shots[i] == AI_player["Carrier"][0] or shots[i] == AI_player["Carrier"][1] or shots[i] == AI_player["Carrier"][2] or shots[i] == AI_player["Carrier"][3]:
                 counter = counter + 1
-                Player_counter = Player_counter + 1
                 draw_new_button_hit(shots[i][0], shots[i][1])
                 
+                if AI_player["AI Surface"][shots[i][0]][shots[i][1]]["REF"] == "SHIP HIT":
+                    pass
+                else:
+                    Player_counter = Player_counter + 1
+                
+                AI_player["AI Surface"][shots[i][0]][shots[i][1]]["REF"] = "SHIP HIT"
+                    
             else:
                 draw_new_button_miss(shots[i][0], shots[i][1])
         if counter > 0:
@@ -462,8 +569,15 @@ def right_boundary_shot(row, column):
             Player["Player Underwater"][shots[i][0]][shots[i][1]]["Presence"] = "HIT"
             if shots[i] == Player["Submarine"][0] or shots[i] == Player["Submarine"][1] or shots[i] == Player["Submarine"][2]:
                 draw_new_button_hit(shots[i][0], shots[i][1])
-                AI_counter = AI_counter + 1
                 counter = counter + 1
+                
+                if Player["Player Underwater"][shots[i][0]][shots[i][1]]["REF"] == "SHIP HIT":
+                    pass
+                else:
+                    AI_counter = AI_counter + 1
+                
+                Player["Player Underwater"][shots[i][0]][shots[i][1]]["REF"] = "SHIP HIT"
+                
             else:
                 draw_new_button_miss(shots[i][0], shots[i][1])
                 
@@ -479,8 +593,14 @@ def right_boundary_shot(row, column):
             
             if shots[i] == AI_player["Submarine"][0] or shots[i] == AI_player["Submarine"][1] or shots[i] == AI_player["Submarine"][2]:
                 counter = counter + 1
-                Player_counter = Player_counter + 1
                 draw_new_button_hit(shots[i][0], shots[i][1])
+                
+                if AI_player["AI Underwater"][shots[i][0]][shots[i][1]]["REF"] == "SHIP HIT":
+                    pass
+                else:
+                    Player_counter = Player_counter + 1
+                
+                AI_player["AI Underwater"][shots[i][0]][shots[i][1]]["REF"] = "SHIP HIT"
             
             else:
                 draw_new_button_miss(shots[i][0], shots[i][1])
@@ -495,8 +615,15 @@ def right_boundary_shot(row, column):
             Player["Player Surface"][shots[i][0]][shots[i][1]]["Presence"] = "HIT"
             if shots[i] == Player["Carrier"][0] or shots[i] == Player["Carrier"][1] or shots[i] == Player["Carrier"][2] or shots[i] == Player["Carrier"][3]:
                 counter = counter + 1
-                AI_counter = AI_counter + 1
                 draw_new_button_hit(shots[i][0], shots[i][1])
+                
+                if Player["Player Surface"][shots[i][0]][shots[i][1]]["REF"] == "SHIP HIT":
+                    pass
+                else:
+                    AI_counter = AI_counter + 1
+                
+                Player["Player Surface"][shots[i][0]][shots[i][1]]["REF"] = "SHIP HIT"
+                
             else:
                 draw_new_button_miss(shots[i][0], shots[i][1])
         if counter > 0:
@@ -511,8 +638,14 @@ def right_boundary_shot(row, column):
             
             if shots[i] == AI_player["Carrier"][0] or shots[i] == AI_player["Carrier"][1] or shots[i] == AI_player["Carrier"][2] or shots[i] == AI_player["Carrier"][3]:
                 counter = counter + 1
-                Player_counter = Player_counter + 1
                 draw_new_button_hit(shots[i][0], shots[i][1])
+                
+                if AI_player["AI Surface"][shots[i][0]][shots[i][1]]["REF"] == "SHIP HIT":
+                    pass
+                else:
+                    Player_counter = Player_counter + 1
+                
+                AI_player["AI Surface"][shots[i][0]][shots[i][1]]["REF"] = "SHIP HIT"
             
             else:
                 draw_new_button_miss(shots[i][0], shots[i][1])
@@ -548,8 +681,14 @@ def top_right_corner_shot(row, column):
             Player["Player Underwater"][shots[i][0]][shots[i][1]]["Presence"] = "HIT"
             if shots[i] == Player["Submarine"][0] or shots[i] == Player["Submarine"][1] or shots[i] == Player["Submarine"][2]:
                 counter = counter + 1
-                AI_counter = AI_counter + 1
                 draw_new_button_hit(shots[i][0], shots[i][1])
+                
+                if Player["Player Underwater"][shots[i][0]][shots[i][1]]["REF"] == "SHIP HIT":
+                    pass
+                else:
+                    AI_counter = AI_counter + 1
+                
+                Player["Player Underwater"][shots[i][0]][shots[i][1]]["REF"] = "SHIP HIT"            
             
             else:
                 draw_new_button_miss(shots[i][0], shots[i][1])
@@ -568,8 +707,14 @@ def top_right_corner_shot(row, column):
         
             if shots[i] == AI_player["Submarine"][0] or shots[i] == AI_player["Submarine"][1] or shots[i] == AI_player["Submarine"][2]:
                 counter = counter + 1
-                Player_counter = Player_counter + 1
                 draw_new_button_hit(shots[i][0], shots[i][1])
+                
+                if AI_player["AI Underwater"][shots[i][0]][shots[i][1]]["REF"] == "SHIP HIT":
+                    pass
+                else:
+                    Player_counter = Player_counter + 1
+                
+                AI_player["AI Underwater"][shots[i][0]][shots[i][1]]["REF"] = "SHIP HIT"
             
             else:
                 draw_new_button_miss(shots[i][0], shots[i][1])
@@ -587,8 +732,14 @@ def top_right_corner_shot(row, column):
             Player["Player Surface"][shots[i][0]][shots[i][1]]["Presence"] = "HIT"
             if shots[i] == Player["Carrier"][0] or shots[i] == Player["Carrier"][1] or shots[i] == Player["Carrier"][2] or shots[i] == Player["Carrier"][3]:
                 counter = counter + 1
-                AI_counter = AI_counter + 1
                 draw_new_button_hit(shots[i][0], shots[i][1])
+                
+                if Player["Player Surface"][shots[i][0]][shots[i][1]]["REF"] == "SHIP HIT":
+                    pass
+                else:
+                    AI_counter = AI_counter + 1
+                
+                Player["Player Surface"][shots[i][0]][shots[i][1]]["REF"] = "SHIP HIT"        
             
             else:
                 draw_new_button_miss(shots[i][0], shots[i][1])
@@ -607,9 +758,15 @@ def top_right_corner_shot(row, column):
             
             if shots[i] == AI_player["Carrier"][0] or shots[i] == AI_player["Carrier"][1] or shots[i] == AI_player["Carrier"][2] or shots[i] == AI_player["Carrier"][3]:
                 counter = counter + 1
-                Player_counter = Player_counter + 1
                 draw_new_button_hit(shots[i][0], shots[i][1])
-            
+                
+                if AI_player["AI Surface"][shots[i][0]][shots[i][1]]["REF"] == "SHIP HIT":
+                    pass
+                else:
+                    Player_counter = Player_counter + 1
+                
+                AI_player["AI Surface"][shots[i][0]][shots[i][1]]["REF"] = "SHIP HIT"     
+                    
             else:
                 draw_new_button_miss(shots[i][0], shots[i][1])
     
@@ -641,8 +798,15 @@ def top_left_corner_shot(row, column):
             Player["Player Underwater"][shots[i][0]][shots[i][1]]["Presence"] = "HIT"
             if shots[i] == Player["Submarine"][0] or shots[i] == Player["Submarine"][1] or shots[i] == Player["Submarine"][2]:
                 counter = counter + 1
-                AI_counter = AI_counter + 1
                 draw_new_button_hit(shots[i][0], shots[i][1])
+                
+                if Player["Player Underwater"][shots[i][0]][shots[i][1]]["REF"] == "SHIP HIT":
+                    pass
+                else:
+                    AI_counter = AI_counter + 1
+                
+                Player["Player Underwater"][shots[i][0]][shots[i][1]]["REF"] = "SHIP HIT"
+                
             
             else:
                 draw_new_button_miss(shots[i][0], shots[i][1])
@@ -661,8 +825,14 @@ def top_left_corner_shot(row, column):
         
             if shots[i] == AI_player["Submarine"][0] or shots[i] == AI_player["Submarine"][1] or shots[i] == AI_player["Submarine"][2]:
                 counter = counter + 1
-                Player_counter = Player_counter + 1
                 draw_new_button_hit(shots[i][0], shots[i][1])
+                
+                if AI_player["AI Underwater"][shots[i][0]][shots[i][1]]["REF"] == "SHIP HIT":
+                    pass
+                else:
+                    Player_counter = Player_counter + 1
+                
+                AI_player["AI Underwater"][shots[i][0]][shots[i][1]]["REF"] = "SHIP HIT"
             
             else:
                 draw_new_button_miss(shots[i][0], shots[i][1])
@@ -680,8 +850,14 @@ def top_left_corner_shot(row, column):
             Player["Player Surface"][shots[i][0]][shots[i][1]]["Presence"] = "HIT"
             if shots[i] == Player["Carrier"][0] or shots[i] == Player["Carrier"][1] or shots[i] == Player["Carrier"][2] or shots[i] == Player["Carrier"][3]:
                 counter = counter + 1
-                AI_counter = AI_counter + 1
                 draw_new_button_hit(shots[i][0], shots[i][1])
+                
+                if Player["Player Surface"][shots[i][0]][shots[i][1]]["REF"] == "SHIP HIT":
+                    pass
+                else:
+                    AI_counter = AI_counter + 1
+                
+                Player["Player Surface"][shots[i][0]][shots[i][1]]["REF"] = "SHIP HIT"
             
             else:
                 draw_new_button_miss(shots[i][0], shots[i][1])
@@ -700,8 +876,14 @@ def top_left_corner_shot(row, column):
             
             if shots[i] == AI_player["Carrier"][0] or shots[i] == AI_player["Carrier"][1] or shots[i] == AI_player["Carrier"][2] or shots[i] == AI_player["Carrier"][3]:
                 counter = counter + 1
-                Player_counter = Player_counter + 1
                 draw_new_button_hit(shots[i][0], shots[i][1])
+
+                if AI_player["AI Surface"][shots[i][0]][shots[i][1]]["REF"] == "SHIP HIT":
+                    pass
+                else:
+                    Player_counter = Player_counter + 1
+                
+                AI_player["AI Surface"][shots[i][0]][shots[i][1]]["REF"] = "SHIP HIT"
                 
             else:
                 draw_new_button_miss(shots[i][0], shots[i][1])
@@ -733,8 +915,13 @@ def bottom_left_corner_shot(row, column):
             Player["Player Underwater"][shots[i][0]][shots[i][1]]["Presence"] = "HIT"
             if shots[i] == Player["Submarine"][0] or shots[i] == Player["Submarine"][1] or shots[i] == Player["Submarine"][2]:
                 counter = counter + 1
-                AI_counter = AI_counter + 1
                 draw_new_button_hit(shots[i][0], shots[i][1])
+
+                if Player["Player Underwater"][shots[i][0]][shots[i][1]]["Presence"] == "HIT":
+                    continue
+                else:
+                    AI_counter = AI_counter + 1
+                
             
             else:
                 draw_new_button_miss(shots[i][0], shots[i][1])
@@ -753,8 +940,14 @@ def bottom_left_corner_shot(row, column):
         
             if shots[i] == AI_player["Submarine"][0] or shots[i] == AI_player["Submarine"][1] or shots[i] == AI_player["Submarine"][2]:
                 counter = counter + 1
-                Player_counter = Player_counter + 1
                 draw_new_button_hit(shots[i][0], shots[i][1])
+                
+                if AI_player["AI Underwater"][shots[i][0]][shots[i][1]]["REF"] == "SHIP HIT":
+                    pass
+                else:
+                    Player_counter = Player_counter + 1
+                
+                AI_player["AI Underwater"][shots[i][0]][shots[i][1]]["REF"] = "SHIP HIT"
             
             else:
                 draw_new_button_miss(shots[i][0], shots[i][1])
@@ -772,8 +965,14 @@ def bottom_left_corner_shot(row, column):
             Player["Player Surface"][shots[i][0]][shots[i][1]]["Presence"] = "HIT"
             if shots[i] == Player["Carrier"][0] or shots[i] == Player["Carrier"][1] or shots[i] == Player["Carrier"][2] or shots[i] == Player["Carrier"][3]:
                 counter = counter + 1
-                AI_counter = AI_counter + 1
                 draw_new_button_hit(shots[i][0], shots[i][1])
+                
+                if Player["Player Surface"][shots[i][0]][shots[i][1]]["REF"] == "SHIP HIT":
+                    pass
+                else:
+                    AI_counter = AI_counter + 1
+                
+                Player["Player Surface"][shots[i][0]][shots[i][1]]["REF"] = "SHIP HIT"
             
             else:
                 draw_new_button_miss(shots[i][0], shots[i][1])
@@ -792,8 +991,14 @@ def bottom_left_corner_shot(row, column):
             
             if shots[i] == AI_player["Carrier"][0] or shots[i] == AI_player["Carrier"][1] or shots[i] == AI_player["Carrier"][2] or shots[i] == AI_player["Carrier"][3]:
                 counter = counter + 1
-                Player_counter = Player_counter + 1
                 draw_new_button_hit(shots[i][0], shots[i][1])
+                
+                if AI_player["AI Surface"][shots[i][0]][shots[i][1]]["REF"] == "SHIP HIT":
+                    pass
+                else:
+                    Player_counter = Player_counter + 1
+                
+                AI_player["AI Surface"][shots[i][0]][shots[i][1]]["REF"] = "SHIP HIT"
             
             else:
                 draw_new_button_miss(shots[i][0], shots[i][1])
@@ -825,6 +1030,13 @@ def bottom_right_corner_shot(row, column):
             if shots[i] == Player["Submarine"][0] or shots[i] == Player["Submarine"][1] or shots[i] == Player["Submarine"][2]:
                 counter = counter + 1
                 draw_new_button_hit(shots[i][0], shots[i][1])
+                
+                if Player["Player Underwater"][shots[i][0]][shots[i][1]]["REF"] == "SHIP HIT":
+                    pass
+                else:
+                    AI_counter = AI_counter + 1
+                
+                Player["Player Underwater"][shots[i][0]][shots[i][1]]["REF"] = "SHIP HIT"
             
             else:
                 draw_new_button_miss(shots[i][0], shots[i][1])
@@ -844,6 +1056,13 @@ def bottom_right_corner_shot(row, column):
             if shots[i] == AI_player["Submarine"][0] or shots[i] == AI_player["Submarine"][1] or shots[i] == AI_player["Submarine"][2]:
                 counter = counter + 1
                 draw_new_button_hit(shots[i][0], shots[i][1])
+                
+                if AI_player["AI Underwater"][shots[i][0]][shots[i][1]]["REF"] == "SHIP HIT":
+                    pass
+                else:
+                    Player_counter = Player_counter + 1
+                
+                AI_player["AI Underwater"][shots[i][0]][shots[i][1]]["REF"] = "SHIP HIT"
             
             else:
                 draw_new_button_miss(shots[i][0], shots[i][1])
@@ -862,6 +1081,13 @@ def bottom_right_corner_shot(row, column):
             if shots[i] == Player["Carrier"][0] or shots[i] == Player["Carrier"][1] or shots[i] == Player["Carrier"][2] or shots[i] == Player["Carrier"][3]:
                 counter = counter + 1
                 draw_new_button_hit(shots[i][0], shots[i][1])
+                
+                if Player["Player Surface"][shots[i][0]][shots[i][1]]["REF"] == "SHIP HIT":
+                    pass
+                else:
+                    AI_counter = AI_counter + 1
+                
+                Player["Player Surface"][shots[i][0]][shots[i][1]]["REF"] = "SHIP HIT"
             
             else:
                 draw_new_button_miss(shots[i][0], shots[i][1])
@@ -881,7 +1107,13 @@ def bottom_right_corner_shot(row, column):
             if shots[i] == AI_player["Carrier"][0] or shots[i] == AI_player["Carrier"][1] or shots[i] == AI_player["Carrier"][2] or shots[i] == AI_player["Carrier"][3]:
                 counter = counter + 1
                 draw_new_button_hit(shots[i][0], shots[i][1])
-            
+
+                if AI_player["AI Surface"][shots[i][0]][shots[i][1]]["REF"] == "SHIP HIT":
+                    pass
+                else:
+                    Player_counter = Player_counter + 1
+                
+                AI_player["AI Surface"][shots[i][0]][shots[i][1]]["REF"] = "SHIP HIT"           
             else:
                 draw_new_button_miss(shots[i][0], shots[i][1])
  
@@ -891,7 +1123,7 @@ def scatter_shot(row, column, depth):
     global Player
     global AI_player
     global AI_counter
-    global Player
+    global Player_counter
     
     shots = [(row-1,column-1,0), 
              (row+1, column+1,0), 
@@ -947,6 +1179,13 @@ def scatter_shot(row, column, depth):
                 if shots[i] == AI_player["Carrier"][0] or shots[i] == AI_player["Carrier"][1] or shots[i] == AI_player["Carrier"][2] or shots[i] == AI_player["Carrier"][3]:
                     counter = counter + 1
                     draw_new_button_hit(shots[i][0], shots[i][1])
+                    
+                    if AI_player["AI Surface"][shots[i][0]][shots[i][1]]["REF"] == "SHIP HIT":
+                        pass
+                    else:
+                        Player_counter = Player_counter + 1
+                    
+                    AI_player["AI Surface"][shots[i][0]][shots[i][1]]["REF"] = "SHIP HIT"         
             
                 else:
                     draw_new_button_miss(shots[i][0], shots[i][1])
@@ -987,6 +1226,14 @@ def scatter_shot(row, column, depth):
                 if shots[i] == AI_player["Submarine"][0] or shots[i] == AI_player["Submarine"][1] or shots[i] == AI_player["Submarine"][2]:
                     counter = counter + 1
                     draw_new_button_hit(shots[i][0], shots[i][1])
+                    
+                    if AI_player["AI Underwater"][shots[i][0]][shots[i][1]]["REF"] == "SHIP HIT":
+                        pass
+                    else:
+                        Player_counter = Player_counter + 1
+                    
+                    AI_player["AI Underwater"][shots[i][0]][shots[i][1]]["REF"] = "SHIP HIT"
+                    
                 else:
                     draw_new_button_miss(shots[i][0], shots[i][1])
                     
@@ -1023,6 +1270,13 @@ def scatter_shot(row, column, depth):
                 if shots[i] == Player["Submarine"][0] or shots[i] == Player["Submarine"][1] or shots[i] == Player["Submarine"][2] :
                     counter = counter + 1
                     draw_new_button_hit(shots[i][0], shots[i][1])
+                    
+                    if Player["Player Underwater"][shots[i][0]][shots[i][1]]["REF"] == "SHIP HIT":
+                        pass
+                    else:
+                        AI_counter = AI_counter + 1
+                    
+                    Player["Player Underwater"][shots[i][0]][shots[i][1]]["REF"] = "SHIP HIT"
                 
                 else:
                     draw_new_button_miss(shots[i][0], shots[i][1])
@@ -1060,6 +1314,13 @@ def scatter_shot(row, column, depth):
                 if shots[i] == Player["Carrier"][0] or shots[i] == Player["Carrier"][1] or shots[i] == Player["Carrier"][2] or shots[i] == Player["Carrier"][3]:
                     counter = counter + 1
                     draw_new_button_hit(shots[i][0], shots[i][1])
+                    
+                    if Player["Player Surface"][shots[i][0]][shots[i][1]]["REF"] == "SHIP HIT":
+                        pass
+                    else:
+                        AI_counter = AI_counter + 1
+                    
+                    Player["Player Surface"][shots[i][0]][shots[i][1]]["REF"] = "SHIP HIT"
                 
                 else:
                     draw_new_button_miss(shots[i][0], shots[i][1])
@@ -1099,50 +1360,44 @@ def AI_player_turn():
     global Player
     global AI_player
     
-    random_surface = random.randint(0,1)
+    print ("Player counter = %d | AI counter = %d." % (Player_counter, AI_counter))
     
-    if random_surface == 0:
-        random_underwater_x = random.randint(1,10)
-        random_underwater_y = random.randint(0,9)
-        row = random_underwater_x
-        column = random_underwater_y
-
-        if Player["Player Underwater"][random_underwater_x][random_underwater_y]["Presence"] == "HIT":
-            print ("Bot Thinking...")
-            AI_player_turn()
-
-        else:
-            print("AI shooting Player Underwater", end = '')
-            print (" at coordinate %d row %d column"%(row,column))
-            scatter_shot(row, column, 0)
-            
-    else:
-        random_surface_x = random.randint(1,10)
-        random_surface_y = random.randint(11,20)
-        row = random_surface_x
-        column = random_surface_y
+    if Player_counter <= 6 and AI_counter <= 6:
         
-        if Player["Player Surface"][random_surface_x][random_surface_y]["Presence"] == "HIT":
-            print ("Bot Thinking...")
-            AI_player_turn()
-
+        random_surface = random.randint(0,1)
+        if random_surface == 0:
+            random_underwater_x = random.randint(1,10)
+            random_underwater_y = random.randint(0,9)
+            row = random_underwater_x
+            column = random_underwater_y
+        
+            if Player["Player Underwater"][random_underwater_x][random_underwater_y]["Presence"] == "HIT":
+                print ("Bot Thinking...")
+                AI_player_turn()
+        
+            else:
+                print("AI shooting Player Underwater", end = '')
+                print (" at coordinate %d row %d column"%(row,column))
+                scatter_shot(row, column, 0)
+                
+                
         else:
-            print("AI shooting Player Surface", end = '')
-            print (" at coordinate %d row %d column"%(row,column))
-            scatter_shot(row, column, 1)
-
-
-def game_start():
-    global AI_counter
-    global Player_counter
-    global Player
-    global AI_player
-    while AI_counter < 7 or Player_counter < 7:
-        redraw_boards()
+            random_surface_x = random.randint(1,10)
+            random_surface_y = random.randint(11,20)
+            row = random_surface_x
+            column = random_surface_y
+            
+            if Player["Player Surface"][random_surface_x][random_surface_y]["Presence"] == "HIT":
+                print ("Bot Thinking...")
+                
+        
+            else:
+                print("AI shooting Player Surface", end = '')
+                print (" at coordinate %d row %d column"%(row,column))
+                scatter_shot(row, column, 1)
     else:
-        if AI_counter == 7:
-            print ("AI won")
+        if Player_counter == 7:
+            print ("Player Won")
+            End_prompt()
         else:
-            print ("Player won")
-
-#game_start()
+            print ("AI Won, better luck next time")
