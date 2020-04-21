@@ -702,6 +702,7 @@ def redraw_boards():
     
     print (Player)
     
+    
     Player["Player Surface"] = {}
     Player["Player Underwater"] = {}
     AI_player["AI Surface"] = {}
@@ -775,7 +776,25 @@ def redraw_boards():
             
             AI_surface_cell.grid(row=i, column=j)
             
-    
+    for i in range(len(Player["Carrier"])):
+        player_ship_location = Button(redraw_gameboard,
+                                      height = 2, 
+                                      width = 4, 
+                                      command=cannot_shoot,
+                                      highlightbackground='blue')
+        
+        player_ship_location.grid(row = Player["Carrier"][i][0], column = Player["Carrier"][i][1])
+
+    for i in range (len(Player["Submarine"])):
+        player_ship_location = Button(redraw_gameboard,
+                                      height = 2, 
+                                      width = 4, 
+                                      command=cannot_shoot,
+                                      highlightbackground='blue')
+        
+        player_ship_location.grid(row = Player["Submarine"][i][0], column = Player["Submarine"][i][1])
+        
+        
 
     redraw_gameboard.mainloop()
 
@@ -819,26 +838,40 @@ def End_prompt():
     quit_game.place(relx = 1, rely = 0.5, anchor = E)
     quit_game.pack()
     
-    
 
 
 def play_again ():
     global redraw_gameboard
     global End_prompt
-    
+    global AI_counter
+    global Player_counter
+
     redraw_gameboard.destroy()
     End_prompt.destroy()
+    login_success_screen.destroy()
+    login_screen.destroy()
     
+    AI_counter = 0
+    Player_counter = 0
+    Player = {}
+    
+    basegame()
+    
+
     
 def quit_battleship():
     global redraw_gameboard
     global End_prompt
+    global window
+    global login_screen
     
     End_prompt.destroy()
     redraw_gameboard.destroy()
+    window.destroy()
+    login_screen.destroy()
     
     
-    
+
 
 def draw_new_button_hit(row, column):
     
@@ -859,6 +892,13 @@ def draw_new_button_hit(row, column):
 
 
 def draw_new_button_miss(row, column):
+        
+    """
+    ===========================
+    RE DRAW NEW BUTTON FOR MISS
+    ===========================
+    """
+    
     
     global redraw_gameboard
 
@@ -2066,5 +2106,6 @@ def AI_player_turn():
             End_prompt()
         else:
             print ("AI Won, better luck next time")
+            End_prompt()
 
 main_account_screen()
