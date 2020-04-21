@@ -391,7 +391,7 @@ def carrier_button(row, column):
                 carrier_btn.grid(row=x, column=column)
 
                 # AddNote: There are two pairs of brackets, one for the append function, one to make the data a tuple
-                Coordinates.append((x,column - 11,1))
+                Coordinates.append((x,column,1))
                 Player["Carrier"] = Coordinates
 
                 # state = "disabled" stops the button from doing anything. This is to prevent players from pressing the grid instead of the pop-up box that appears.
@@ -411,7 +411,7 @@ def carrier_button(row, column):
             for x in range(row, row + 4):
                 carrier_btn = Button(surface_screen, bg='red', height = 2, width=4)
                 carrier_btn.grid(row=x, column=column)
-                Coordinates.append((x,column - 11,1))
+                Coordinates.append((x,column,1))
                 Player["Carrier"] = Coordinates
                 carrier_btn.config(state="disabled")
             carrier_alert_message()
@@ -420,13 +420,13 @@ def carrier_button(row, column):
 
     # If chosen direction is left
     if direction.get() == 3:
-        if column >= 15:
+        if column >= 14:
             close_button()
             Coordinates = []
             for x in range(column - 3, column + 1):
                 carrier_btn = Button(surface_screen, bg='red', height = 2, width=4)
                 carrier_btn.grid(row=row, column=x)
-                Coordinates.append((row,x - 11,1))
+                Coordinates.append((row,x,1))
                 Player["Carrier"] = Coordinates
                 carrier_btn.config(state="disabled")
             carrier_alert_message()
@@ -435,13 +435,13 @@ def carrier_button(row, column):
 
     # If chosen direction is right
     if direction.get() == 4:
-        if column <= 18:
+        if column <= 17:
             close_button()
             Coordinates = []
             for x in range(column, column + 4):
                 carrier_btn = Button(surface_screen, bg='red', height = 2, width=4)
                 carrier_btn.grid(row=row, column=x)
-                Coordinates.append((row,x - 11,1))
+                Coordinates.append((row,x,1))
                 Player["Carrier"] = Coordinates
                 carrier_btn.config(state="disabled")
             carrier_alert_message()
@@ -516,7 +516,7 @@ def submarine_placing_button():
 
             # Preventing chosen buttons from being restored to "default" settings and retain their red coloring
             
-            if not i in Carrier_Row or not (j-11) in Carrier_Column:
+            if not i in Carrier_Row or not j in Carrier_Column:
                 btn = Button(surface_screen, height = 2, width = 4, command=callback_submarine(i,j))
                 btn.grid(row=i, column=j)
 
@@ -547,14 +547,14 @@ def submarine_button(row, column):
             for x in range(row - 2, row + 1):
                 submarine_btn = Button(surface_screen, bg='blue', height = 2, width = 4)
                 submarine_btn.grid(row=x, column=column)
-                Coordinates.append((x,column + 1,0))
+                Coordinates.append((x,column,0))
                 Player["Submarine"] = Coordinates
                 submarine_btn.config(state="disabled")
             submarine_alert_message()
         elif row >= 3 and column > 9:
 
             for x in range(row - 2, row + 1):
-                if x in Carrier_Row and (column - 11) in Carrier_Column:
+                if x in Carrier_Row and column in Carrier_Column:
                     messagebox.showinfo("Invalid", "Invalid ship placement")
                     return
 
@@ -563,7 +563,7 @@ def submarine_button(row, column):
             for x in range(row - 2, row + 1):
                 submarine_btn = Button(surface_screen, bg='blue', height = 2, width = 4)
                 submarine_btn.grid(row=x, column=column)
-                Coordinates.append((x,column - 11,1))
+                Coordinates.append((x,column,1))
                 Player["Submarine"] = Coordinates
                 submarine_btn.config(state="disabled")
             submarine_alert_message()
@@ -578,14 +578,14 @@ def submarine_button(row, column):
             for x in range(row, row + 3):
                 submarine_btn = Button(surface_screen, bg='blue', height = 2, width=4)
                 submarine_btn.grid(row=x, column=column)
-                Coordinates.append((x,column + 1,0))
+                Coordinates.append((x,column,0))
                 Player["Submarine"] = Coordinates
                 submarine_btn.config(state="disabled")
             submarine_alert_message()
         if row <= 8 and column > 9:
 
             for x in range(row, row + 3):
-                if x in Carrier_Row and (column - 11) in Carrier_Column:
+                if x in Carrier_Row and column in Carrier_Column:
                     messagebox.showinfo("Invalid", "Invalid ship placement")
                     return
 
@@ -594,7 +594,7 @@ def submarine_button(row, column):
             for x in range(row, row + 3):
                 submarine_btn = Button(surface_screen, bg='blue', height = 2, width=4)
                 submarine_btn.grid(row=x, column=column)
-                Coordinates.append((x,column - 11,1))
+                Coordinates.append((x,column,1))
                 Player["Submarine"] = Coordinates
                 submarine_btn.config(state="disabled")
             submarine_alert_message()
@@ -603,10 +603,10 @@ def submarine_button(row, column):
 
     # If chosen direction is left
     if direction.get() == 3:
-        if column > 9 and column >= 14:
+        if column > 9 and column >= 13:
 
             for x in range(column - 2, column + 1):
-                if row in Carrier_Row and (x - 11) in Carrier_Column:
+                if row in Carrier_Row and x in Carrier_Column:
                     messagebox.showinfo("Invalid", "Invalid ship placement")
                     return
 
@@ -615,7 +615,7 @@ def submarine_button(row, column):
             for x in range(column - 2, column + 1):
                 submarine_btn = Button(surface_screen, bg='blue', height = 2, width=4)
                 submarine_btn.grid(row=row, column=x)
-                Coordinates.append((row,x - 11,1))
+                Coordinates.append((row,x,1))
                 Player["Submarine"] = Coordinates
                 submarine_btn.config(state="disabled")
             submarine_alert_message()
@@ -625,7 +625,7 @@ def submarine_button(row, column):
             for x in range(column - 2, column + 1):
                 submarine_btn = Button(surface_screen, bg='blue', height = 2, width=4)
                 submarine_btn.grid(row=row, column=x)
-                Coordinates.append((row,x + 1,0))
+                Coordinates.append((row,x,0))
                 Player["Submarine"] = Coordinates
                 submarine_btn.config(state="disabled")
             submarine_alert_message()
@@ -634,10 +634,10 @@ def submarine_button(row, column):
 
     # If chosen direction is right
     if direction.get() == 4:
-        if column > 9 and column <= 19:
+        if column > 9 and column <= 18:
 
             for x in range(column, column + 3):
-                if row in Carrier_Row and (x - 11) in Carrier_Column:
+                if row in Carrier_Row and x in Carrier_Column:
                     messagebox.showinfo("Invalid", "Invalid ship placement")
                     return
 
@@ -646,7 +646,7 @@ def submarine_button(row, column):
             for x in range(column, column + 3):
                 submarine_btn = Button(surface_screen, bg='blue', height = 2, width=4)
                 submarine_btn.grid(row=row, column=x)
-                Coordinates.append((row,x - 11,1))
+                Coordinates.append((row,x,1))
                 Player["Submarine"] = Coordinates
                 submarine_btn.config(state="disabled")
             submarine_alert_message()
@@ -656,7 +656,7 @@ def submarine_button(row, column):
             for x in range(column, column + 3):
                 submarine_btn = Button(surface_screen, bg='blue', height = 2, width=4)
                 submarine_btn.grid(row=row, column=x)
-                Coordinates.append((row,x + 1,0))
+                Coordinates.append((row,x,0))
                 Player["Submarine"] = Coordinates
                 submarine_btn.config(state="disabled")
             submarine_alert_message()
@@ -674,7 +674,7 @@ def close_button2():
     # Separate loops to facilitate a column space between surface and underwater grids
     for i in range(1, 11):
         for j in range(11, 21):
-            if not i in Carrier_Row or not (j-11) in Carrier_Column:
+            if not i in Carrier_Row or not j in Carrier_Column:
                 btn = Button(surface_screen, height = 2, width = 4, command=callback_submarine(i,j))
                 btn.grid(row=i, column=j)
                 btn.config(state="disabled")
