@@ -710,17 +710,17 @@ def redraw_boards():
     
     redraw_gameboard = Tk()
     redraw_gameboard.title("Battleship Game")
-    redraw_gameboard.geometry("1080x1240")
+    redraw_gameboard.geometry("850x850")
     redraw_gameboard.resizable(True, True)
     
-    Label(redraw_gameboard, text="Player Underwater", height = 3, width = 40).grid(row=0, column=0, columnspan=10)
+    Label(redraw_gameboard, text="Player Under water", height = 3, width = 40).grid(row=0, column=0, columnspan=10)
     Label(redraw_gameboard, text="Player Surface", height = 3, width = 40).grid(row=0, column=12, columnspan=10)
 
     # Preparing spacings between the grids
     Label(redraw_gameboard, text="", height = 20, width = 4).grid(row=1, column=10, rowspan=10)
-    Label(redraw_gameboard, text="AI Underwater", height = 3, width = 40).grid(row=11, column=0, columnspan=10)
+    Label(redraw_gameboard, text="AI Under water", height = 3, width = 40).grid(row=11, column=0, columnspan=10)
     Label(redraw_gameboard, text="AI Surface", height = 3, width = 40).grid(row=11, column=11, columnspan=10)
-    Label(redraw_gameboard, text="", height = 4, width = 1).grid(row=11, column=0, columnspan=10)
+    #Label(redraw_gameboard, text="", height = 4, width = 1).grid(row=11, column=0, columnspan=10)
 
     
     for i in range(1, 11):

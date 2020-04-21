@@ -23,7 +23,7 @@ from random import randint
 import random
 
 Player = {'Carrier':[(3, 2, 1), (4, 2, 1), (5, 2, 1), (6, 2, 1)], 'Submarine': [(4, 10, 0), (5, 10, 0), (6, 10, 0)]}
-AI_player = {'Carrier':[(12,12,1), (12,13,1), (12,14,1), (12,15,1)], 'Submarine': [(0,12,0), (0,13,0), (0,14,0), (0,15,0)]}
+AI_player = {'Carrier':[(12,12,1), (12,13,1), (12,14,1), (12,15,1)], 'Submarine': [(12,0,0), (12,1,0), (12,2,0)]}
 
 def redraw_boards():
     global redraw_gameboard
@@ -45,17 +45,17 @@ def redraw_boards():
     
     redraw_gameboard = Tk()
     redraw_gameboard.title("Battleship Game")
-    redraw_gameboard.geometry("1080x1240")
+    redraw_gameboard.geometry("850x850")
     redraw_gameboard.resizable(False, False)
     
-    Label(redraw_gameboard, text="Player Underwater", height = 3, width = 40).grid(row=0, column=0, columnspan=10)
-    Label(redraw_gameboard, text="Player Surface", height = 3, width = 40).grid(row=0, column=12, columnspan=10)
+    Label(redraw_gameboard, text="Player Underwater", height = 3, width = 15).grid(row=0, column=0, columnspan=10)
+    Label(redraw_gameboard, text="Player Surface", height = 3, width = 15).grid(row=0, column=12, columnspan=10)
 
     # Preparing spacings between the grids
     Label(redraw_gameboard, text="", height = 20, width = 4).grid(row=1, column=10, rowspan=10)
-    Label(redraw_gameboard, text="AI Underwater", height = 3, width = 40).grid(row=11, column=0, columnspan=10)
-    Label(redraw_gameboard, text="AI Surface", height = 3, width = 40).grid(row=11, column=11, columnspan=10)
-    Label(redraw_gameboard, text="", height = 4, width = 1).grid(row=11, column=0, columnspan=10)
+    Label(redraw_gameboard, text="AI Underwater", height = 3, width = 15).grid(row=11, column=0, columnspan=10)
+    Label(redraw_gameboard, text="AI Surface", height = 3, width = 15, bg = 'red').grid(row=11, column=11, columnspan=10)
+    #Label(redraw_gameboard, text="", height = 4, width = 1).grid(row=11, column=0, columnspan=10)
 
     
     for i in range(1, 11):
@@ -243,6 +243,8 @@ def top_boundary_shot(row, column):
             hit_missed()
             
 def bottom_boundary_shot(row, column):
+    global redraw_gameboard
+    
     shots  = [(row,column,0), 
               (row-1, column,0), 
               (row-1, column +1,0), 
@@ -279,7 +281,14 @@ def bottom_boundary_shot(row, column):
             
             if shots[i] == AI_player["Submarine"][0] or shots[i] == AI_player["Submarine"][1] or shots[i] == AI_player["Submarine"][2]:
                 counter = counter + 1
-                draw_new_button_hit(shots[i][0], shots[i][1])
+                
+                new_button = Button(redraw_gameboard, 
+                        height = 2, 
+                        width = 4, 
+                        command= already_shot,
+                        highlightbackground='red')
+    
+                new_button.grid(row = shots[i][0], column = shots[i][1])
             
             else:
                 draw_new_button_miss(shots[i][0], shots[i][1])
