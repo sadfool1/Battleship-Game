@@ -21,6 +21,7 @@ from tkinter import messagebox
 import os 
 from random import randint
 import random
+from PIL import Image, ImageTk
 
 Player = {'Carrier':[(1, 11, 1), (1, 12, 1), (1, 13, 1), (1, 14, 1)], 'Submarine': [(1, 0, 0), (1, 1, 0), (1, 2, 0)]}
 AI_player = {'Carrier':[(12,12,1), (12,13,1), (12,14,1), (12,15,1)], 'Submarine': [(12,0,0), (12,1,0), (12,2,0)]}
@@ -54,10 +55,10 @@ def redraw_boards():
     # Preparing spacings between the grids
     Label(redraw_gameboard, text="", height = 20, width = 4).grid(row=1, column=10, rowspan=10)
     Label(redraw_gameboard, text="AI Underwater", height = 3, width = 15).grid(row=11, column=0, columnspan=10)
-    Label(redraw_gameboard, text="AI Surface", height = 3, width = 15, bg = 'red').grid(row=11, column=11, columnspan=10)
+    Label(redraw_gameboard, text="AI Surface", height = 3, width = 15).grid(row=11, column=11, columnspan=10)
     #Label(redraw_gameboard, text="", height = 4, width = 1).grid(row=11, column=0, columnspan=10)
 
-    
+
     for i in range(1, 11):
         Player["Player Underwater"][i] = {}
         for j in range(10):
@@ -67,8 +68,9 @@ def redraw_boards():
                                             height = 2, 
                                             width = 4, 
                                             command=cannot_shoot,
-                                            highlightbackground='white')
+                                            highlightbackground="#000080")
             player_underwater_cell.grid(row=i, column=j)
+            
             
     for i in range(1, 11):
         Player["Player Surface"][i] = {}
@@ -79,8 +81,8 @@ def redraw_boards():
                                          height = 2, 
                                          width = 4, 
                                          command=cannot_shoot,
-                                         highlightbackground='white')
-            player_surface_cell.grid(row=i, column=j) 
+                                         highlightbackground="#1E90FF")
+            player_surface_cell.grid(row=i, column=j) \
             
     for i in range(12, 22):
         AI_player["AI Underwater"][i] = {}
@@ -90,7 +92,7 @@ def redraw_boards():
             AI_underwater_cell = Button(redraw_gameboard, 
                                         height = 2, 
                                         width = 4,
-                                        highlightbackground='white',
+                                        highlightbackground="#000080",
                                         command=lambda row=i, column=j, depth = 0: shoot(row, column, depth))
             AI_underwater_cell.grid(row=i, column=j)
     
@@ -102,7 +104,7 @@ def redraw_boards():
             AI_surface_cell = Button(redraw_gameboard, 
                                      height = 2, 
                                      width = 4, 
-                                     highlightbackground='white',
+                                     highlightbackground="#1E90FF",
                                      command=lambda row=i, column=j, depth = 1: shoot(row, column, depth))
             
             AI_surface_cell.grid(row=i, column=j)
@@ -113,7 +115,7 @@ def redraw_boards():
                                       height = 2, 
                                       width = 4, 
                                       command=cannot_shoot,
-                                      highlightbackground='blue')
+                                      highlightbackground="#2E8B57")
         
         player_ship_location.grid(row = Player["Carrier"][i][0], column = Player["Carrier"][i][1])
 
@@ -122,7 +124,7 @@ def redraw_boards():
                                       height = 2, 
                                       width = 4, 
                                       command=cannot_shoot,
-                                      highlightbackground='blue')
+                                      highlightbackground="#2E8B57")
         
         player_ship_location.grid(row = Player["Submarine"][i][0], column = Player["Submarine"][i][1])
 
@@ -144,21 +146,23 @@ def AI_hit_missed():
 def AI_commandless():
     pass
 
+
 def draw_new_button_hit(row, column):
     
     global redraw_gameboard
     global Player
-    global AI_player
-    global player_underwater_cell
-    global player_surface_cell
-    global AI_underwater_cell
-    global AI_surface_cell
+    global AI_player    
+    
+    script_dir = os.path.dirname(__file__)
+    rel_path = "explode.png"
+    
+    image = ImageTk.PhotoImage(file=os.path.join(script_dir, rel_path))
     
     new_button = Button(redraw_gameboard, 
                         height = 2, 
                         width = 4, 
                         command= already_shot,
-                        highlightbackground='red')
+                        image=image)
     
     new_button.grid(row = row, column = column)
 
@@ -177,7 +181,7 @@ def draw_new_button_miss(row, column):
                         height = 2, 
                         width = 4, 
                         command= already_shot,
-                        highlightbackground='black')
+                        highlightbackground="#000000")
     
     new_button.grid(row = row, column = column)
        
