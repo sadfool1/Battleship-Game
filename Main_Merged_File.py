@@ -20,12 +20,20 @@ from tkinter import messagebox # for pop-up messages as part of the verification
 import os # importing support for different operating systems
 from random import randint # importing random module to generate random number
 import random
+from PIL import Image, ImageTk
+
 '''
 Program code starts here
 '''
 
 #Making first main window:
 def main_account_screen():
+    """
+    ==========================
+    Author: BRYAN LIM
+    Initialise Main Menu
+    ==========================
+    """
     global window
     window = tk.Tk()
     window.title("Main Screen Battleship GUI")
@@ -44,6 +52,12 @@ def main_account_screen():
 
 # designing new screen for log in
 def login():
+    """
+    ===========================================
+    Author: BRYAN LIM
+    Initialise Log in button and command button
+    ===========================================
+    """
     global login_screen
     login_screen = Toplevel(window)
     login_screen.title("Login")
@@ -78,6 +92,12 @@ def login():
 counter = 0
 
 def login_verify():
+    """
+    ==============================
+    Author: BRYAN LIM
+    Login credentials verification
+    ==============================
+    """
     global counter
 
     #case where 3 tries has been reached, to interrupt the rest of the function
@@ -106,8 +126,15 @@ def login_verify():
     else:
         user_not_found()
 
-# Designing popup for login success
+
+
 def login_success():
+    """
+    ================================
+    Author: BRYAN LIM
+    Designing popup for login success
+    =================================
+    """
     global login_success_screen
     counter = 0 # reset the number of tries given to the user due to success
     login_success_screen = Toplevel(login_screen)
@@ -116,8 +143,14 @@ def login_success():
     Label(login_success_screen, text="Login Success").pack()
     Button(login_success_screen, text="OK", command = basegame).pack()
 
-# Designing popup for login invalid password
+
 def password_not_recognised():
+    """
+    ==========================================
+    Author: BRYAN LIM
+    Designing popup for login invalid password
+    ==========================================
+    """
     global password_not_recog_screen
     global counter
     password_not_recog_screen = Toplevel(login_screen)
@@ -298,10 +331,6 @@ def signup_user():
 
 # Dictionary used to store the coordinates of the player's ships
 Player = {}
-
-AI_player = {'Carrier':[(12,12,1), (12,13,1), (12,14,1), (12,15,1)], 
-                        'Submarine': [(12,0,0), (12,1,0), (12,2,0)]}
-
 # making the screen to choose to start a new game or continue an existing game
 # imported from login/signup GUI
 def basegame():
@@ -692,8 +721,12 @@ def submarine_alert_message():
     
 AI_player = {'Carrier':[(12,12,1), (12,13,1), (12,14,1), (12,15,1)], 'Submarine': [(12,0,0), (12,1,0), (12,2,0)]}
 
+
 AI_counter = 0
 Player_counter = 0 
+
+button_height = 2
+button_width = 4
 
 def redraw_boards():
     global redraw_gameboard
@@ -730,11 +763,12 @@ def redraw_boards():
             Player["Player Underwater"][i][j]["Presence"] = None
             Player["Player Underwater"][i][j]["REF"] = None
             player_underwater_cell = Button(redraw_gameboard, 
-                                            height = 2, 
-                                            width = 4, 
+                                            height = button_height, 
+                                            width = button_width, 
                                             command=cannot_shoot,
-                                            highlightbackground='white')
+                                            highlightbackground="#000080")
             player_underwater_cell.grid(row=i, column=j)
+            
             
     for i in range(1, 11):
         Player["Player Surface"][i] = {}
@@ -743,10 +777,10 @@ def redraw_boards():
             Player["Player Surface"][i][j]["Presence"] = None
             Player["Player Surface"][i][j]["REF"] = None
             player_surface_cell = Button(redraw_gameboard, 
-                                         height = 2, 
-                                         width = 4, 
+                                         height = button_height, 
+                                         width = button_width, 
                                          command=cannot_shoot,
-                                         highlightbackground='white')
+                                         highlightbackground="#1E90FF")
             player_surface_cell.grid(row=i, column=j) 
             
     for i in range(12, 22):
@@ -756,9 +790,9 @@ def redraw_boards():
             AI_player["AI Underwater"][i][j]["Presence"] = None
             AI_player["AI Underwater"][i][j]["REF"] = None
             AI_underwater_cell = Button(redraw_gameboard, 
-                                        height = 2, 
-                                        width = 4,
-                                        highlightbackground='white',
+                                        height = button_height, 
+                                        width = button_width,
+                                        highlightbackground="#000080",
                                         command=lambda row=i, column=j, depth = 0: shoot(row, column, depth))
             AI_underwater_cell.grid(row=i, column=j)
     
@@ -769,34 +803,34 @@ def redraw_boards():
             AI_player["AI Surface"][i][j]["Presence"] = None
             AI_player["AI Surface"][i][j]["REF"] = None
             AI_surface_cell = Button(redraw_gameboard, 
-                                     height = 2, 
-                                     width = 4, 
-                                     highlightbackground='white',
+                                     height = button_height, 
+                                     width = button_width, 
+                                     highlightbackground="#1E90FF",
                                      command=lambda row=i, column=j, depth = 1: shoot(row, column, depth))
             
             AI_surface_cell.grid(row=i, column=j)
             
+    
     for i in range(len(Player["Carrier"])):
         player_ship_location = Button(redraw_gameboard,
-                                      height = 2, 
-                                      width = 4, 
+                                      height = button_height, 
+                                      width = button_width, 
                                       command=cannot_shoot,
-                                      highlightbackground='blue')
+                                      highlightbackground="#2E8B57")
         
         player_ship_location.grid(row = Player["Carrier"][i][0], column = Player["Carrier"][i][1])
 
     for i in range (len(Player["Submarine"])):
         player_ship_location = Button(redraw_gameboard,
-                                      height = 2, 
-                                      width = 4, 
+                                      height = button_height, 
+                                      width = button_width, 
                                       command=cannot_shoot,
-                                      highlightbackground='blue')
+                                      highlightbackground="#2E8B57")
         
         player_ship_location.grid(row = Player["Submarine"][i][0], column = Player["Submarine"][i][1])
-        
-        
-
+    
     redraw_gameboard.mainloop()
+
 
 def cannot_shoot():
     print (messagebox.showinfo("Invalid","Cannot shoot yourself. lol :P"))
@@ -879,14 +913,30 @@ def draw_new_button_hit(row, column):
     ==========================
     RE DRAW NEW BUTTON FOR HIT
     ==========================
+    Author: James
     """
     
-    global redraw_gameboard  
-    new_button = Button(redraw_gameboard, 
-                        height = 2, 
-                        width = 4, 
-                        command= already_shot,
-                        highlightbackground='red')
+    global redraw_gameboard
+    global Player
+    global AI_player
+    global image
+    
+    script_dir = os.path.dirname(__file__)
+    rel_path = "explode2.png"
+    
+    image = Image.open(os.path.join(script_dir, rel_path))
+    image = image.resize((50,50), Image.ANTIALIAS)
+    
+    imtk = ImageTk.PhotoImage(image, master = redraw_gameboard)
+    
+    
+    new_button = Button(redraw_gameboard,
+                        image=imtk,
+                        height = 30, 
+                        width = 36,
+                        command= already_shot)
+    
+    new_button.image = imtk
     
     new_button.grid(row = row, column = column)
 
@@ -903,8 +953,8 @@ def draw_new_button_miss(row, column):
     global redraw_gameboard
 
     new_button = Button(redraw_gameboard, 
-                        height = 2, 
-                        width = 4, 
+                        height = button_height, 
+                        width = button_width, 
                         command= already_shot,
                         highlightbackground='black')
     

@@ -34,8 +34,7 @@ def redraw_boards():
     global redraw_gameboard
     global Player
     global AI_player
-    global image2
-
+    
     print (Player)
     print (AI_player)
     
@@ -82,7 +81,7 @@ def redraw_boards():
                                          width = button_width, 
                                          command=cannot_shoot,
                                          highlightbackground="#1E90FF")
-            player_surface_cell.grid(row=i, column=j) \
+            player_surface_cell.grid(row=i, column=j) 
             
     for i in range(12, 22):
         AI_player["AI Underwater"][i] = {}
@@ -162,9 +161,9 @@ def draw_new_button_hit(row, column):
     script_dir = os.path.dirname(__file__)
     rel_path = "explode.png"
     image = Image.open(os.path.join(script_dir, rel_path))
-    image2 = image.resize((button_width,button_height))
+    image = image.resize((50,50), Image.ANTIALIAS)
     
-    imtk = ImageTk.PhotoImage(image2)
+    imtk = ImageTk.PhotoImage(image)
     
     new_button = Button(redraw_gameboard,
                         image=imtk,
@@ -172,6 +171,7 @@ def draw_new_button_hit(row, column):
                         width = 20+16,
                         command= already_shot)
     
+    new_button.image = imtk
     new_button.grid(row = row, column = column)
 
 
