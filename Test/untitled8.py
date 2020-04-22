@@ -28,7 +28,7 @@ AI_player = {'Carrier':[(12,12,1), (12,13,1), (12,14,1), (12,15,1)], 'Submarine'
 
 AI_counter = 0
 Player_counter = 0 
-
+redraw_boards()
 def redraw_boards():
     global redraw_gameboard
     global Player

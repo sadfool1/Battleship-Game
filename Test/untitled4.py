@@ -22,7 +22,7 @@ import os
 from random import randint
 import random
 
-Player = {'Carrier':[(3, 2, 1), (4, 2, 1), (5, 2, 1), (6, 2, 1)], 'Submarine': [(4, 10, 0), (5, 10, 0), (6, 10, 0)]}
+Player = {'Carrier':[(1, 11, 1), (1, 12, 1), (1, 13, 1), (1, 14, 1)], 'Submarine': [(1, 0, 0), (1, 1, 0), (1, 2, 0)]}
 AI_player = {'Carrier':[(12,12,1), (12,13,1), (12,14,1), (12,15,1)], 'Submarine': [(12,0,0), (12,1,0), (12,2,0)]}
 
 def redraw_boards():
@@ -108,6 +108,23 @@ def redraw_boards():
             AI_surface_cell.grid(row=i, column=j)
             
     
+    for i in range(len(Player["Carrier"])):
+        player_ship_location = Button(redraw_gameboard,
+                                      height = 2, 
+                                      width = 4, 
+                                      command=cannot_shoot,
+                                      highlightbackground='blue')
+        
+        player_ship_location.grid(row = Player["Carrier"][i][0], column = Player["Carrier"][i][1])
+
+    for i in range (len(Player["Submarine"])):
+        player_ship_location = Button(redraw_gameboard,
+                                      height = 2, 
+                                      width = 4, 
+                                      command=cannot_shoot,
+                                      highlightbackground='blue')
+        
+        player_ship_location.grid(row = Player["Submarine"][i][0], column = Player["Submarine"][i][1])
 
     redraw_gameboard.mainloop()
     #referee()
