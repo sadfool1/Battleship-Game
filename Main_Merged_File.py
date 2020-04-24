@@ -733,8 +733,6 @@ def redraw_boards():
     global Player
     global AI_player
     
-    print (Player)
-    
     
     Player["Player Surface"] = {}
     Player["Player Underwater"] = {}
@@ -857,7 +855,7 @@ def End_prompt():
     play_again = Button(End_prompt, 
                         height = 2, 
                         width = 10, 
-                        command=redraw_boards,
+                        command=player_boards,
                         highlightbackground='white', text = "Play Again")
     
     play_again.place(relx = 0, rely = 0.5, anchor = W)
@@ -873,8 +871,7 @@ def End_prompt():
     quit_game.pack()
     
 
-
-def play_again ():
+def play_again():
     global redraw_gameboard
     global End_prompt
     global AI_counter
@@ -887,8 +884,8 @@ def play_again ():
     
     AI_counter = 0
     Player_counter = 0
-    Player = {}
     
+    Player = {}
     basegame()
     
 
@@ -904,8 +901,6 @@ def quit_battleship():
     window.destroy()
     login_screen.destroy()
     
-    
-
 
 def draw_new_button_hit(row, column):
     

@@ -164,6 +164,8 @@ def draw_new_button_hit(row, column):
                         command= already_shot,
                         image=image)
     
+    
+    new_button.image = image
     new_button.grid(row = row, column = column)
 
 
