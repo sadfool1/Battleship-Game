@@ -217,6 +217,14 @@ def delete_reactivation():
 
 # designing new screen for sign ups
 def signup():
+    """
+    ==========================================
+    Author: 
+        BRYAN LIM 
+        ODELIA
+    Designing popup for login invalid password
+    ==========================================
+    """
     global signup_screen
     signup_screen = Toplevel(window)
     signup_screen.title("Sign Up")
@@ -252,6 +260,15 @@ def signup():
 
 #storing new data of username and password during sign up
 def signup_user():
+    
+    """
+    ==========================================
+    Author: 
+        BRYAN LIM 
+        ODELIA
+    Designing popup for login invalid password
+    ==========================================
+    """
     username_info = username_signup.get()
     password_info = password_signup.get()
     dob_info = dob_signup.get()
@@ -316,7 +333,7 @@ def signup_user():
     elif not re.search("[!#$%&'()*+,-./:;<=>?@[\]^_`{|}~]", password_info):
         messagebox.showinfo("Invalid", "Password has no special characters")
     elif username_info.lower() in password_info.lower():
-        messagebox.showinfo("Invalid", "Password should not contain the username")
+        messagebox.showinfo("Invalid", "Password should not contain your username.")
 
     # Note: Python reads line by line so putting this at the end works
     else:
