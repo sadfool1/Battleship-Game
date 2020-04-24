@@ -732,35 +732,61 @@ def redraw_boards():
     global redraw_gameboard
     global Player
     global AI_player
-    
+    global AI_underwater_cell
+    global player_underwater_cell
+    global AI_frame
+    global Player_frame
+    global root
     
     Player["Player Surface"] = {}
     Player["Player Underwater"] = {}
     AI_player["AI Surface"] = {}
     AI_player["AI Underwater"] = {}
     
-    redraw_gameboard = Tk()
-    redraw_gameboard.title("Battleship Game")
-    redraw_gameboard.geometry("850x850")
-    redraw_gameboard.resizable(True, True)
+    root = Tk()
+    root.grid()
     
-    Label(redraw_gameboard, text="Player Under water", height = 3, width = 40).grid(row=0, column=0, columnspan=10)
-    Label(redraw_gameboard, text="Player Surface", height = 3, width = 40).grid(row=0, column=12, columnspan=10)
+    Player_frame = LabelFrame(root, text = "Player Boards")
+    Player_frame.grid()
+
+    AI_frame = LabelFrame(root, text = "AI Boards")
+    AI_frame.grid()
+    
+    root.title("Battleship Game")
+    root.geometry("1000x1000")
+    root.resizable(False, False)
+    
+    Label(Player_frame, text="Player Underwater", height = 3, width = 15).grid(row=0, column=0, columnspan=10)
+    Label(Player_frame, text="Player Surface", height = 3, width = 15).grid(row=0, column=12, columnspan=10)
 
     # Preparing spacings between the grids
-    Label(redraw_gameboard, text="", height = 20, width = 4).grid(row=1, column=10, rowspan=10)
-    Label(redraw_gameboard, text="AI Under water", height = 3, width = 40).grid(row=11, column=0, columnspan=10)
-    Label(redraw_gameboard, text="AI Surface", height = 3, width = 40).grid(row=11, column=11, columnspan=10)
-    #Label(redraw_gameboard, text="", height = 4, width = 1).grid(row=11, column=0, columnspan=10)
-
+    Label(Player_frame, text="", height = 20, width = 4).grid(row=1, column=10, rowspan=10)
+    Label(AI_frame, text="AI Underwater", height = 3, width = 15).grid(row=11, column=0, columnspan=10)
+    Label(AI_frame, text="AI Surface", height = 3, width = 15).grid(row=11, column=11, columnspan=10)
     
+    Label(AI_frame, text="", height = 20, width = 4).grid(row=11, column=10, rowspan=10)
+    #Label(AI_frame, text="", height = 4, width = 1).grid(row=11, column=0, columnspan=10)
+    
+
+    for i in range(12, 22):
+        AI_player["AI Underwater"][i] = {}
+        for j in range(10):
+            AI_player["AI Underwater"][i][j] = {}
+            AI_player["AI Underwater"][i][j]["Presence"] = None
+            AI_underwater_cell = Button(AI_frame, 
+                                        height = button_height, 
+                                        width = button_width,
+                                        highlightbackground="#000080",
+                                        command=lambda row=i, column=j, depth = 0: shoot(row, column, depth))
+            AI_underwater_cell.grid(row=i, column=j)
+            
+            
     for i in range(1, 11):
         Player["Player Underwater"][i] = {}
         for j in range(10):
             Player["Player Underwater"][i][j] = {}
             Player["Player Underwater"][i][j]["Presence"] = None
-            Player["Player Underwater"][i][j]["REF"] = None
-            player_underwater_cell = Button(redraw_gameboard, 
+            player_underwater_cell = Button(Player_frame, 
                                             height = button_height, 
                                             width = button_width, 
                                             command=cannot_shoot,
@@ -773,34 +799,20 @@ def redraw_boards():
         for j in range(11, 21):
             Player["Player Surface"][i][j] = {}
             Player["Player Surface"][i][j]["Presence"] = None
-            Player["Player Surface"][i][j]["REF"] = None
-            player_surface_cell = Button(redraw_gameboard, 
+            player_surface_cell = Button(Player_frame, 
                                          height = button_height, 
                                          width = button_width, 
                                          command=cannot_shoot,
                                          highlightbackground="#1E90FF")
             player_surface_cell.grid(row=i, column=j) 
-            
-    for i in range(12, 22):
-        AI_player["AI Underwater"][i] = {}
-        for j in range(10):
-            AI_player["AI Underwater"][i][j] = {}
-            AI_player["AI Underwater"][i][j]["Presence"] = None
-            AI_player["AI Underwater"][i][j]["REF"] = None
-            AI_underwater_cell = Button(redraw_gameboard, 
-                                        height = button_height, 
-                                        width = button_width,
-                                        highlightbackground="#000080",
-                                        command=lambda row=i, column=j, depth = 0: shoot(row, column, depth))
-            AI_underwater_cell.grid(row=i, column=j)
+        
     
     for i in range(12, 22):
         AI_player["AI Surface"][i] = {}
         for j in range(11, 21):
             AI_player["AI Surface"][i][j] = {}
             AI_player["AI Surface"][i][j]["Presence"] = None
-            AI_player["AI Surface"][i][j]["REF"] = None
-            AI_surface_cell = Button(redraw_gameboard, 
+            AI_surface_cell = Button(AI_frame, 
                                      height = button_height, 
                                      width = button_width, 
                                      highlightbackground="#1E90FF",
@@ -810,7 +822,7 @@ def redraw_boards():
             
     
     for i in range(len(Player["Carrier"])):
-        player_ship_location = Button(redraw_gameboard,
+        player_ship_location = Button(Player_frame,
                                       height = button_height, 
                                       width = button_width, 
                                       command=cannot_shoot,
@@ -819,7 +831,7 @@ def redraw_boards():
         player_ship_location.grid(row = Player["Carrier"][i][0], column = Player["Carrier"][i][1])
 
     for i in range (len(Player["Submarine"])):
-        player_ship_location = Button(redraw_gameboard,
+        player_ship_location = Button(Player_frame,
                                       height = button_height, 
                                       width = button_width, 
                                       command=cannot_shoot,
@@ -828,6 +840,7 @@ def redraw_boards():
         player_ship_location.grid(row = Player["Submarine"][i][0], column = Player["Submarine"][i][1])
     
     redraw_gameboard.mainloop()
+
 
 
 def cannot_shoot():
@@ -904,56 +917,122 @@ def quit_battleship():
 
 def draw_new_button_hit(row, column):
     
-    """
-    ==========================
-    RE DRAW NEW BUTTON FOR HIT
-    ==========================
-    Author: James
-    """
+    global redraw_gameboard
+    global Player
+    global AI_player
+    global AI_underwater_cell
+    global player_underwater_cell
+    global AI_frame
+    global Player_frame
+    global root
+    
+    script_dir = os.path.dirname(__file__)
+    rel_path = "explode.png"
+    image = Image.open(os.path.join(script_dir, rel_path))
+    image = image.resize((50,50), Image.ANTIALIAS)
+    
+    imtk = ImageTk.PhotoImage(image, master = root)
+    
+    if row  <= 10 and column <= 10:
+        new_button = Button(Player_frame,
+                            image=imtk,
+                            height = 20+10, 
+                            width = 20+16,
+                            command= already_shot, state = DISABLED)
+        
+        new_button.image = imtk
+        
+        new_button.lift()
+        new_button.grid(row = row, column = column, in_ = Player_frame)
+                
+    elif row >= 12 and column <= 9:
+        new_button = Button(root,
+                            image=imtk,
+                            height = 20+10, 
+                            width = 20+16,
+                            command= already_shot, state = DISABLED)
+        AI_frame.lower()
+        new_button.image = imtk
+        new_button.lift()
+        
+        new_button.grid(row = row, column = column, in_ = AI_frame)
+        
+        
+    elif row <= 10 and column >= 11:
+        new_button = Button(Player_frame,
+                            image=imtk,
+                            height = 20+10, 
+                            width = 20+16,
+                            command= already_shot, state = DISABLED)
+        
+        new_button.image = imtk
+        new_button.grid(row = row, column = column, in_ = Player_frame)
+        new_button.lift()
+        
+    else:
+        new_button = Button(AI_frame,
+                            image=imtk,
+                            height = 20+10, 
+                            width = 20+16,
+                            command= already_shot, state = DISABLED)
+        
+        new_button.image = imtk
+        new_button.grid(row = row, column = column, in_ = AI_frame)
+        new_button.lift()
+        
+        
+        
+        
+def draw_new_button_miss(row, column):
     
     global redraw_gameboard
     global Player
     global AI_player
-    global image
+    global AI_underwater_cell
+    global player_underwater_cell
+    global AI_frame
+    global Player_frame
     
-    script_dir = os.path.dirname(__file__)
-    rel_path = "explode2.png"
-    
-    image = Image.open(os.path.join(script_dir, rel_path))
-    image = image.resize((50,50), Image.ANTIALIAS)
-    
-    imtk = ImageTk.PhotoImage(image, master = redraw_gameboard)
-    
-    
-    new_button = Button(redraw_gameboard,
-                        image=imtk,
-                        height = 30, 
-                        width = 36,
-                        command= already_shot)
-    
-    new_button.image = imtk
-    
-    new_button.grid(row = row, column = column)
-
-
-def draw_new_button_miss(row, column):
+    if row  <= 10 and column <= 10:
         
-    """
-    ===========================
-    RE DRAW NEW BUTTON FOR MISS
-    ===========================
-    """
-    
-    
-    global redraw_gameboard
-
-    new_button = Button(redraw_gameboard, 
-                        height = button_height, 
-                        width = button_width, 
-                        command= already_shot,
-                        highlightbackground='black')
-    
-    new_button.grid(row = row, column = column)
+        new_button = Button(Player_frame,
+                            height = button_height, 
+                            width = button_width,
+                            command= already_shot, 
+                            highlightbackground='black')
+        
+        new_button.grid(row = row, column = column, in_ = Player_frame)
+        new_button.lift()
+                
+    elif row >= 12 and column <= 9:
+        new_button = Button(AI_frame,
+                            height = button_height, 
+                            width = button_width,
+                            command= already_shot, 
+                            highlightbackground='black')
+        
+        new_button.grid(row = row, column = column, in_ = AI_frame)
+        new_button.lift()
+        
+    elif row <= 10 and column >= 11:
+        new_button = Button(Player_frame,
+                            height = button_height, 
+                            width = button_width,
+                            command= already_shot, 
+                            highlightbackground='black')
+        
+        new_button.grid(row = row, column = column, in_ = Player_frame)
+        new_button.lift()
+        
+    else:
+        new_button = Button(AI_frame,
+                            height = button_height, 
+                            width = button_width,
+                            command= already_shot, 
+                            highlightbackground='black')
+        
+        new_button.grid(row = row, column = column, in_ = AI_frame)
+        new_button.lift()
 
 
     

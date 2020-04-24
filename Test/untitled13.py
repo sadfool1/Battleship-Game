@@ -176,14 +176,13 @@ def draw_new_button_hit(row, column):
     imtk = ImageTk.PhotoImage(image, master = root)
     
     if row  <= 10 and column <= 10:
-        new_button = Button(Player_frame,
+        new_button = Button(root,
                             image=imtk,
                             height = 20+10, 
                             width = 20+16,
                             command= already_shot, state = DISABLED)
-        
+        Player_frame.lower()
         new_button.image = imtk
-        
         new_button.lift()
         new_button.grid(row = row, column = column, in_ = Player_frame)
                 
@@ -196,7 +195,6 @@ def draw_new_button_hit(row, column):
         AI_frame.lower()
         new_button.image = imtk
         new_button.lift()
-        
         new_button.grid(row = row, column = column, in_ = AI_frame)
         
         
