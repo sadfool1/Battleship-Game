@@ -773,6 +773,7 @@ def redraw_boards():
         for j in range(10):
             AI_player["AI Underwater"][i][j] = {}
             AI_player["AI Underwater"][i][j]["Presence"] = None
+            AI_player["AI Underwater"][i][j]["REF"] = None
             AI_underwater_cell = Button(AI_frame, 
                                         height = button_height, 
                                         width = button_width,
@@ -786,6 +787,7 @@ def redraw_boards():
         for j in range(10):
             Player["Player Underwater"][i][j] = {}
             Player["Player Underwater"][i][j]["Presence"] = None
+            Player["Player Underwater"][i][j]["REF"] = None
             player_underwater_cell = Button(Player_frame, 
                                             height = button_height, 
                                             width = button_width, 
@@ -799,6 +801,7 @@ def redraw_boards():
         for j in range(11, 21):
             Player["Player Surface"][i][j] = {}
             Player["Player Surface"][i][j]["Presence"] = None
+            Player["Player Surface"][i][j]["REF"] = None
             player_surface_cell = Button(Player_frame, 
                                          height = button_height, 
                                          width = button_width, 
@@ -812,6 +815,7 @@ def redraw_boards():
         for j in range(11, 21):
             AI_player["AI Surface"][i][j] = {}
             AI_player["AI Surface"][i][j]["Presence"] = None
+            AI_player["AI Surface"][i][j]["REF"] = None
             AI_surface_cell = Button(AI_frame, 
                                      height = button_height, 
                                      width = button_width, 
