@@ -962,7 +962,7 @@ def draw_new_button_hit(row, column):
     imtk = ImageTk.PhotoImage(image, master = root)
     
     if row  <= 10 and column <= 10:
-        new_button = Button(Player_frame,
+        new_button = Button(root,
                             image=imtk,
                             height = 20+10, 
                             width = 20+16,
@@ -2286,7 +2286,7 @@ def End_prompt():
     End_prompt.geometry("250x250")
     End_prompt.resizable(False, False)
     
-    if AI_player == 7:
+    if AI_counter == 7:
         Win_announcer = Label(End_prompt, text = "BOT WON.")
         Win_announcer.pack()
     else:
