@@ -739,7 +739,16 @@ def submarine_alert_message():
         submarine_placing_button()
 
 
+"""
+====================================================================
+Author:
+    
+James Morillo 
+Odelia
 
+Initilise AI Carriers and it's Submarine in random horizontal line.
+====================================================================
+"""
 
 AI_player_submarine_randomizer_row = random.randint(13,20)
 AI_player_submarine_randomizer_column = random.randint(1,8)
@@ -747,7 +756,6 @@ AI_player_submarine_randomizer_column = random.randint(1,8)
 
 AI_player_surface_randomizer_row = random.randint(12,21)
 AI_player_surface_randomizer_column = random.randint(11,17)
-
 
 AI_player = {'Carrier':[(AI_player_surface_randomizer_row,AI_player_surface_randomizer_column,1), 
                         (AI_player_surface_randomizer_row,AI_player_surface_randomizer_column+1,1), 
@@ -757,7 +765,14 @@ AI_player = {'Carrier':[(AI_player_surface_randomizer_row,AI_player_surface_rand
                                       (AI_player_submarine_randomizer_row,AI_player_submarine_randomizer_column,0), 
                                       (AI_player_submarine_randomizer_row,AI_player_submarine_randomizer_column+1,0)]}
 
-print (AI_player)
+"""
+====================================================================
+Author: James Morillo
+Initilise AI Carriers and Player global counter for win/lose 
+condition. First one to get 7 points win.
+====================================================================
+"""
+
 AI_counter = 0
 Player_counter = 0 
 
@@ -765,6 +780,17 @@ button_height = 2
 button_width = 4
 
 def redraw_boards():
+    
+    """
+    =========================================================================
+    Author: James Morillo
+    Initilise New Board for actual game.
+    
+    Then initialise elements such as the root window, AI player frame, Player 
+    Frame into a grid for convenient grid management.
+    =========================================================================
+    """
+
     global redraw_gameboard
     global Player
     global AI_player
@@ -775,9 +801,12 @@ def redraw_boards():
     global root
     global surface_screen
     
+    
+    #Destroy irrelevant windows that do not affect the gameplay
     surface_screen.destroy()
     game_screen.destroy()
     
+    #initialise tuples for creating the board contents
     Player["Player Surface"] = {}
     Player["Player Underwater"] = {}
     AI_player["AI Surface"] = {}
@@ -788,26 +817,37 @@ def redraw_boards():
     
     Player_frame = LabelFrame(root, text = "Player Boards")
     Player_frame.grid()
-
+    
     AI_frame = LabelFrame(root, text = "AI Boards")
     AI_frame.grid()
     
+    #grid and frame system for root, AI_player_frame, Player_frame for convenient grid system
+    
     root.title("Battleship Game")
-    root.geometry("1000x1000")
+    root.geometry("850x850")
     root.resizable(False, False)
     
+    #individual boards labels for UI convenience
     Label(Player_frame, text="Player Underwater", height = 3, width = 15).grid(row=0, column=0, columnspan=10)
     Label(Player_frame, text="Player Surface", height = 3, width = 15).grid(row=0, column=12, columnspan=10)
-
-    # Preparing spacings between the grids
-    Label(Player_frame, text="", height = 20, width = 4).grid(row=1, column=10, rowspan=10)
     Label(AI_frame, text="AI Underwater", height = 3, width = 15).grid(row=11, column=0, columnspan=10)
     Label(AI_frame, text="AI Surface", height = 3, width = 15).grid(row=11, column=11, columnspan=10)
     
+    # Preparing spacings between the grids to have a neater UI.
+    Label(Player_frame, text="", height = 20, width = 4).grid(row=1, column=10, rowspan=10)
     Label(AI_frame, text="", height = 20, width = 4).grid(row=11, column=10, rowspan=10)
-    #Label(AI_frame, text="", height = 4, width = 1).grid(row=11, column=0, columnspan=10)
     
 
+    """
+    
+    ====================================================================
+    Initialising Board of Buttons for play
+    Store values AI_player["AI Underwater"][i][j]["Presence"] = None 
+    so that when it is hit, this dictionary changes from None to "HIT"
+    ====================================================================
+    
+    """
+    
     for i in range(12, 22):
         AI_player["AI Underwater"][i] = {}
         for j in range(10):
