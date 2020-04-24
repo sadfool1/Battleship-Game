@@ -747,6 +747,7 @@ James Morillo
 Odelia
 
 Initilise AI Carriers and it's Submarine in random horizontal line.
+This is stored following the Dictionary below.
 ====================================================================
 """
 
@@ -824,7 +825,7 @@ def redraw_boards():
     #grid and frame system for root, AI_player_frame, Player_frame for convenient grid system
     
     root.title("Battleship Game")
-    root.geometry("850x850")
+    root.geometry("850x950")
     root.resizable(False, False)
     
     #individual boards labels for UI convenience
@@ -841,7 +842,7 @@ def redraw_boards():
     """
     
     ====================================================================
-    Initialising Board of Buttons for play
+    Initialising 4 Board of Buttons for actual.
     Store values AI_player["AI Underwater"][i][j]["Presence"] = None 
     so that when it is hit, this dictionary changes from None to "HIT"
     ====================================================================
@@ -903,8 +904,9 @@ def redraw_boards():
                                      command=lambda row=i, column=j, depth = 1: shoot(row, column, depth))
             
             AI_surface_cell.grid(row=i, column=j)
-            
     
+    
+    #This 2 for loops are just to highlight the player's Ships in their own Battle Field
     for i in range(len(Player["Carrier"])):
         player_ship_location = Button(Player_frame,
                                       height = button_height, 
@@ -940,65 +942,6 @@ def AI_hit():
 def AI_hit_missed():
     print (messagebox.showinfo("MISSED!", "AI did not hit you! your Turn"))
 
-
-def End_prompt():
-    global redraw_gameboard
-    global End_prompt
-    global AI_counter
-    global Player_counter
-    global Player
-    global AI_player
-    global game_screen
-    
-    root.destroy()
-    
-    AI_counter = 0
-    Player_counter = 0
-    
-    Player = {}
-    AI_player = AI_player
-    
-    End_prompt = Tk()
-    End_prompt.title("Game Over")
-    End_prompt.geometry("250x250")
-    End_prompt.resizable(False, False)
-    
-    if AI_player == 7:
-        Win_announcer = Label(End_prompt, text = "BOT WON.")
-        Win_announcer.pack()
-    else:
-        Win_announcer = Label(End_prompt, text = "YOU WON!")
-        Win_announcer.pack()
-        
-    
-    play_again = Button(End_prompt, 
-                        height = 2, 
-                        width = 10, 
-                        command=basegame,
-                        highlightbackground='white', text = "Play Again")
-    
-    play_again.place(relx = 0, rely = 0.5, anchor = W)
-    play_again.pack()
-    
-    quit_game = Button(End_prompt, 
-                        height = 2, 
-                        width = 10, 
-                        command=quit_battleship,
-                        highlightbackground='white', text = "Quit")
-    
-    quit_game.place(relx = 1, rely = 0.5, anchor = E)
-    quit_game.pack()
-    
-def quit_battleship():
-    global redraw_gameboard
-    global End_prompt
-    global window
-    global login_screen
-    global main_account_screen
-    
-    End_prompt.destroy()
-    window.destroy()
-    
 
 def draw_new_button_hit(row, column):
     
@@ -2303,6 +2246,7 @@ def AI_player_turn():
             
             if Player["Player Surface"][random_surface_x][random_surface_y]["Presence"] == "HIT":
                 print ("Bot Thinking...")
+                AI_player_turn()
                 
         
             else:
@@ -2316,5 +2260,67 @@ def AI_player_turn():
         else:
             print ("AI Won, better luck next time")
             End_prompt()
+
+
+
+def End_prompt():
+    
+    global redraw_gameboard
+    global End_prompt
+    global AI_counter
+    global Player_counter
+    global Player
+    global AI_player
+    global game_screen
+    
+    root.destroy()
+    
+    AI_counter = 0
+    Player_counter = 0
+    
+    Player = {}
+    AI_player = AI_player
+    
+    End_prompt = Tk()
+    End_prompt.title("Game Over")
+    End_prompt.geometry("250x250")
+    End_prompt.resizable(False, False)
+    
+    if AI_player == 7:
+        Win_announcer = Label(End_prompt, text = "BOT WON.")
+        Win_announcer.pack()
+    else:
+        Win_announcer = Label(End_prompt, text = "YOU WON!")
+        Win_announcer.pack()
+        
+    
+    play_again = Button(End_prompt, 
+                        height = 2, 
+                        width = 10, 
+                        command=basegame,
+                        highlightbackground='white', text = "Play Again")
+    
+    play_again.place(relx = 0, rely = 0.5, anchor = W)
+    play_again.pack()
+    
+    quit_game = Button(End_prompt, 
+                        height = 2, 
+                        width = 10, 
+                        command=quit_battleship,
+                        highlightbackground='white', text = "Quit")
+    
+    quit_game.place(relx = 1, rely = 0.5, anchor = E)
+    quit_game.pack()
+    
+def quit_battleship():
+    global redraw_gameboard
+    global End_prompt
+    global window
+    global login_screen
+    global main_account_screen
+    
+    End_prompt.destroy()
+    window.destroy()
+    
 
 main_account_screen()
