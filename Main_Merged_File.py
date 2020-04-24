@@ -359,7 +359,7 @@ def basegame():
     
     game_screen = Tk()
     game_screen.title("Battleship Game")
-    game_screen.geometry("360x240")
+    game_screen.geometry("360x200")
     game_screen.resizable(False, False)
     Button(game_screen, text="Press here to start a new game.", command=player_boards).place(relx=0.5, rely=0.3, anchor=CENTER)
     Button(game_screen, text="Press here to load an existing game.").place(relx=0.5, rely=0.5, anchor=CENTER)
@@ -374,7 +374,7 @@ def player_boards():
     # Setting properties of the grid window
     surface_screen = Tk()
     surface_screen.title("Battleship Game")
-    surface_screen.geometry("1080x640")
+    surface_screen.geometry("1080x500")
     surface_screen.resizable(False, False)
 
     # showing that the carrier is going to be placed first
@@ -928,7 +928,12 @@ def redraw_boards():
     root.mainloop()
 
 
-
+"""
+=================================
+Author: James
+Message functions collected here.
+=================================
+"""
 def cannot_shoot():
     print (messagebox.showinfo("Invalid","Cannot shoot yourself. lol :P"))
 def already_shot():
@@ -944,6 +949,19 @@ def AI_hit_missed():
 
 
 def draw_new_button_hit(row, column):
+    
+    """
+    =====================================================
+    
+    Author: James
+    Create a new button when one of the shots is a "HIT".
+    Changes into a .PNG file titled explode.
+    
+    Used module PIL, to change the button background to 
+    an ImageTk
+    
+    =====================================================
+    """
     
     global redraw_gameboard
     global Player
@@ -961,6 +979,8 @@ def draw_new_button_hit(row, column):
     
     imtk = ImageTk.PhotoImage(image, master = root)
     
+    #frame dependent therefore, we bring to front the img as they are in different frames, hence the master is different for some buttons
+    
     if row  <= 10 and column <= 10:
         new_button = Button(root,
                             image=imtk,
@@ -968,9 +988,9 @@ def draw_new_button_hit(row, column):
                             width = 20+16,
                             command= already_shot, state = DISABLED)
         
+        Player_frame.lower() #we lower this old frame then lift the new button 
         new_button.image = imtk
-        
-        new_button.lift()
+        new_button.lift() 
         new_button.grid(row = row, column = column, in_ = Player_frame)
                 
     elif row >= 12 and column <= 9:
@@ -987,12 +1007,13 @@ def draw_new_button_hit(row, column):
         
         
     elif row <= 10 and column >= 11:
-        new_button = Button(Player_frame,
+        new_button = Button(root,
                             image=imtk,
                             height = 20+10, 
                             width = 20+16,
                             command= already_shot, state = DISABLED)
         
+        Player_frame.lower()
         new_button.image = imtk
         new_button.grid(row = row, column = column, in_ = Player_frame)
         new_button.lift()
@@ -1013,6 +1034,21 @@ def draw_new_button_hit(row, column):
         
 def draw_new_button_miss(row, column):
     
+    """
+    ======================================================
+    
+    Author: James Morillo
+    Create a new button when one of the shots is a "MISS".
+    Changes into a .PNG file titled explode.
+    
+    There are if-else statements and not a simple function
+    because we are working on a frame based window. Hence,
+    we need to specifically tell Python which board we are
+    interested.
+    
+    ======================================================
+    """
+    
     global redraw_gameboard
     global Player
     global AI_player
@@ -1020,7 +1056,9 @@ def draw_new_button_miss(row, column):
     global player_underwater_cell
     global AI_frame
     global Player_frame
-    
+
+    #frame dependent therefore, we bring to front the img as they are in different frames, hence the master is different for some buttons
+
     if row  <= 10 and column <= 10:
         
         new_button = Button(Player_frame,
@@ -1065,6 +1103,25 @@ def draw_new_button_miss(row, column):
 
     
 def top_boundary_shot(row, column):
+    
+    
+    """
+    ======================================================
+    
+    Author: James Morillo
+    Here, scatter hots are different in boundary condition
+    and require special treatment. Hence, only 6 available
+    shots.
+    
+    In this case, it is specifically dealing with the top
+    boundary of the game board.
+    
+    This can be called for all the boards if a shot is 
+    fired.
+    
+    ======================================================
+    """
+    
     global AI_counter
     global Player_counter
     global Player
@@ -1135,7 +1192,7 @@ def top_boundary_shot(row, column):
         counter = 0
         for i in range(len(shots)):
             Player["Player Surface"][shots[i][0]][shots[i][1]]["Presence"] = "HIT"
-            if shots[i] == Player["Carrier"][0] or shots[i] == Player["Carrier"][1] or shots[i] == Player["Carrier"][2] or shots[i] == Player["Carrier"][3]:
+            if shots[i] == Player["Carrier"][0] or shots[i] == Player["Carrier"][1] or shots[i] == Player["Carrier"][2] or shots[i] == Player["Carrier"][3] or shots[i] == Player["Submarine"][0] or shots[i] == Player["Submarine"][1] or  shots[i] == Player["Submarine"][2]: 
                 counter = counter + 1
                 draw_new_button_hit(shots[i][0], shots[i][1])
                 
@@ -1177,6 +1234,24 @@ def top_boundary_shot(row, column):
             hit_missed()
             
 def bottom_boundary_shot(row, column):
+    
+    """
+    ======================================================
+    
+    Author: James Morillo
+    Here, scatter hots are different in boundary condition
+    and require special treatment. Hence, only 6 available
+    shots.
+    
+    In this case, it is specifically dealing with the 
+    bottom boundary of any game board.
+    
+    This can be called for all the boards if a shot is 
+    fired.
+    
+    ======================================================
+    """
+    
     global AI_counter
     global Player_counter
     global Player
@@ -1247,7 +1322,7 @@ def bottom_boundary_shot(row, column):
         counter = 0
         for i in range(len(shots)):
             Player["Player Surface"][shots[i][0]][shots[i][1]]["Presence"] = "HIT"
-            if shots[i] == Player["Carrier"][0] or shots[i] == Player["Carrier"][1] or shots[i] == Player["Carrier"][2] or shots[i] == Player["Carrier"][3]:
+            if shots[i] == Player["Carrier"][0] or shots[i] == Player["Carrier"][1] or shots[i] == Player["Carrier"][2] or shots[i] == Player["Carrier"][3] or shots[i] == Player["Submarine"][0] or shots[i] == Player["Submarine"][1] or  shots[i] == Player["Submarine"][2]:
                 counter = counter + 1
                 draw_new_button_hit(shots[i][0], shots[i][1])
                 
@@ -1289,6 +1364,22 @@ def bottom_boundary_shot(row, column):
             hit_missed()
             
 def left_boundary_shot(row, column):
+    """
+    ======================================================
+    
+    Author: James Morillo
+    Here, scatter hots are different in boundary condition
+    and require special treatment. Hence, only 6 available
+    shots.
+    
+    In this case, it is specifically dealing with the left 
+    boundary of any game board.
+    
+    This can be called for all the boards if a shot is 
+    fired.
+    
+    ======================================================
+    """
     global AI_counter
     global Player_counter
     global Player
@@ -1358,7 +1449,7 @@ def left_boundary_shot(row, column):
         counter = 0
         for i in range(len(shots)):
             Player["Player Surface"][shots[i][0]][shots[i][1]]["Presence"] = "HIT"
-            if shots[i] == Player["Carrier"][0] or shots[i] == Player["Carrier"][1] or shots[i] == Player["Carrier"][2] or shots[i] == Player["Carrier"][3]:
+            if shots[i] == Player["Carrier"][0] or shots[i] == Player["Carrier"][1] or shots[i] == Player["Carrier"][2] or shots[i] == Player["Carrier"][3] or shots[i] == Player["Submarine"][0] or shots[i] == Player["Submarine"][1] or  shots[i] == Player["Submarine"][2]:
                 counter = counter + 1
                 draw_new_button_hit(shots[i][0], shots[i][1])
                 
@@ -1400,6 +1491,23 @@ def left_boundary_shot(row, column):
             hit_missed()
 
 def right_boundary_shot(row, column):
+    """
+    ======================================================
+    
+    Author: James Morillo
+    
+    Here, scatter hots are different in boundary condition
+    and require special treatment. Hence, only 6 available
+    shots.
+    
+    In this case, it is specifically dealing with the right 
+    boundary of any game board.
+    
+    This can be called for all the boards if a shot is 
+    fired.
+    
+    ======================================================
+    """
     
     global AI_counter
     global Player_counter
@@ -1470,7 +1578,7 @@ def right_boundary_shot(row, column):
         counter = 0
         for i in range(len(shots)):
             Player["Player Surface"][shots[i][0]][shots[i][1]]["Presence"] = "HIT"
-            if shots[i] == Player["Carrier"][0] or shots[i] == Player["Carrier"][1] or shots[i] == Player["Carrier"][2] or shots[i] == Player["Carrier"][3]:
+            if shots[i] == Player["Carrier"][0] or shots[i] == Player["Carrier"][1] or shots[i] == Player["Carrier"][2] or shots[i] == Player["Carrier"][3]or shots[i] == Player["Submarine"][0] or shots[i] == Player["Submarine"][1] or  shots[i] == Player["Submarine"][2]:
                 counter = counter + 1
                 draw_new_button_hit(shots[i][0], shots[i][1])
                 
@@ -1513,6 +1621,23 @@ def right_boundary_shot(row, column):
 
     
 def top_right_corner_shot(row, column):
+    """
+    ======================================================
+    
+    Author: James Morillo
+    
+    Here, scatter hots are different in corner shots and 
+    require special treatment. Hence, only 4 available
+    shots.
+    
+    In this case, it is specifically dealing with the top 
+    right corner of any game board.
+    
+    This can be called for all the boards if a shot is 
+    fired.
+    
+    ======================================================
+    """
     
     global AI_counter
     global Player_counter
@@ -1587,7 +1712,7 @@ def top_right_corner_shot(row, column):
         counter = 0
         for i in range(len(shots)):
             Player["Player Surface"][shots[i][0]][shots[i][1]]["Presence"] = "HIT"
-            if shots[i] == Player["Carrier"][0] or shots[i] == Player["Carrier"][1] or shots[i] == Player["Carrier"][2] or shots[i] == Player["Carrier"][3]:
+            if shots[i] == Player["Carrier"][0] or shots[i] == Player["Carrier"][1] or shots[i] == Player["Carrier"][2] or shots[i] == Player["Carrier"][3]or shots[i] == Player["Submarine"][0] or shots[i] == Player["Submarine"][1] or  shots[i] == Player["Submarine"][2]:
                 counter = counter + 1
                 draw_new_button_hit(shots[i][0], shots[i][1])
                 
@@ -1630,7 +1755,23 @@ def top_right_corner_shot(row, column):
     
     
 def top_left_corner_shot(row, column):
+    """
+    ======================================================
     
+    Author: James Morillo
+    
+    Here, scatter hots are different in corner shots and 
+    require special treatment. Hence, only 4 available
+    shots.
+    
+    In this case, it is specifically dealing with the top 
+    left corner of any game board.
+    
+    This can be called for all the boards if a shot is 
+    fired.
+    
+    ======================================================
+    """
     global AI_counter
     global Player_counter
     global Player
@@ -1705,7 +1846,7 @@ def top_left_corner_shot(row, column):
         counter = 0
         for i in range(len(shots)):
             Player["Player Surface"][shots[i][0]][shots[i][1]]["Presence"] = "HIT"
-            if shots[i] == Player["Carrier"][0] or shots[i] == Player["Carrier"][1] or shots[i] == Player["Carrier"][2] or shots[i] == Player["Carrier"][3]:
+            if shots[i] == Player["Carrier"][0] or shots[i] == Player["Carrier"][1] or shots[i] == Player["Carrier"][2] or shots[i] == Player["Carrier"][3]or shots[i] == Player["Submarine"][0] or shots[i] == Player["Submarine"][1] or  shots[i] == Player["Submarine"][2]:
                 counter = counter + 1
                 draw_new_button_hit(shots[i][0], shots[i][1])
                 
@@ -1747,6 +1888,24 @@ def top_left_corner_shot(row, column):
 
                 
 def bottom_left_corner_shot(row, column):
+    
+    """
+    ======================================================
+    
+    Author: James Morillo
+    
+    Here, scatter hots are different in corner shots and 
+    require special treatment. Hence, only 4 available
+    shots.
+    
+    In this case, it is specifically dealing with bottom 
+    left corner of any game board.
+    
+    This can be called for all the boards if a shot is 
+    fired.
+    
+    ======================================================
+    """
     
     global AI_counter
     global Player_counter
@@ -1820,7 +1979,7 @@ def bottom_left_corner_shot(row, column):
         counter = 0
         for i in range(len(shots)):
             Player["Player Surface"][shots[i][0]][shots[i][1]]["Presence"] = "HIT"
-            if shots[i] == Player["Carrier"][0] or shots[i] == Player["Carrier"][1] or shots[i] == Player["Carrier"][2] or shots[i] == Player["Carrier"][3]:
+            if shots[i] == Player["Carrier"][0] or shots[i] == Player["Carrier"][1] or shots[i] == Player["Carrier"][2] or shots[i] == Player["Carrier"][3]or shots[i] == Player["Submarine"][0] or shots[i] == Player["Submarine"][1] or  shots[i] == Player["Submarine"][2]:
                 counter = counter + 1
                 draw_new_button_hit(shots[i][0], shots[i][1])
                 
@@ -1861,6 +2020,23 @@ def bottom_left_corner_shot(row, column):
                 draw_new_button_miss(shots[i][0], shots[i][1])
     
 def bottom_right_corner_shot(row, column):
+    """
+    ======================================================
+    
+    Author: James Morillo
+    
+    Here, scatter hots are different in corner shots and 
+    require special treatment. Hence, only 4 available
+    shots.
+    
+    In this case, it is specifically dealing with bottom 
+    right corner of any game board.
+    
+    This can be called for all the boards if a shot is 
+    fired.
+    
+    ======================================================
+    """
     
     global AI_counter
     global Player_counter
@@ -1935,7 +2111,7 @@ def bottom_right_corner_shot(row, column):
         counter = 0
         for i in range(len(shots)):
             Player["Player Surface"][shots[i][0]][shots[i][1]]["Presence"] = "HIT"
-            if shots[i] == Player["Carrier"][0] or shots[i] == Player["Carrier"][1] or shots[i] == Player["Carrier"][2] or shots[i] == Player["Carrier"][3]:
+            if shots[i] == Player["Carrier"][0] or shots[i] == Player["Carrier"][1] or shots[i] == Player["Carrier"][2] or shots[i] == Player["Carrier"][3]or shots[i] == Player["Submarine"][0] or shots[i] == Player["Submarine"][1] or  shots[i] == Player["Submarine"][2]:
                 counter = counter + 1
                 draw_new_button_hit(shots[i][0], shots[i][1])
                 
@@ -1976,6 +2152,20 @@ def bottom_right_corner_shot(row, column):
  
     
 def scatter_shot(row, column, depth):
+    
+    """
+    ======================================================
+    
+    Author: James Morillo
+    
+    Here, scatter hots are in all directions, since it is 
+    not in the corner or boundary. Hence, 9 available shots.
+    
+    This can be called for all the boards if a shot is 
+    fired.
+    
+    ======================================================
+    """
     
     global Player
     global AI_player
@@ -2168,7 +2358,7 @@ def scatter_shot(row, column, depth):
             counter = 0
             for i in range(len(shots)):
                 Player["Player Surface"][shots[i][0]][shots[i][1]]["Presence"] = "HIT"
-                if shots[i] == Player["Carrier"][0] or shots[i] == Player["Carrier"][1] or shots[i] == Player["Carrier"][2] or shots[i] == Player["Carrier"][3]:
+                if shots[i] == Player["Carrier"][0] or shots[i] == Player["Carrier"][1] or shots[i] == Player["Carrier"][2] or shots[i] == Player["Carrier"][3]or shots[i] == Player["Submarine"][0] or shots[i] == Player["Submarine"][1] or  shots[i] == Player["Submarine"][2]:
                     counter = counter + 1
                     draw_new_button_hit(shots[i][0], shots[i][1])
                     
@@ -2188,6 +2378,27 @@ def scatter_shot(row, column, depth):
             
 
 def shoot(row, column, depth):
+    
+    """
+    ========================================================
+    
+    Author: James Morillo
+    
+    this function is a continuation from redrawboard right at
+    the top, which is the overall controller of the game.
+    
+    Right after a shot, it calls the AI to execute its valid 
+    turn. 
+    
+    If the Player clicks a tile that is already "HIT" stored
+    in dictionary, it will return a pop up message that the
+    area is already shot. 
+    
+    Player can still continue to hit, until a valid hit is
+    executed.
+    
+    ========================================================
+    """
     global redraw_gameboard
     global Player
     global AI_player
@@ -2211,13 +2422,29 @@ def shoot(row, column, depth):
  
 
 def AI_player_turn():
+    """
+    ========================================================
+    
+    Author: James Morillo
+    
+    Here AI's turn comes after every shoot function as above.
+    Most of the shots are attributed to randomness, and 
+    error checking if the shot area is "HIT" using data from
+    dictionary stored.
+    
+    If it is already a "HIT", it will print out "Bot 
+    Thinking..."
+    
+    ========================================================
+    """
     
     global AI_counter
     global Player_counter
     global Player
     global AI_player
     
-    print ("Player Score = %d | AI Score = %d. First hit 7 wins." % (Player_counter, AI_counter))
+    #prints this to keep check
+    print ("Player Score = %d | AI Score = %d. First to hit 7 wins." % (Player_counter, AI_counter))
     
     if Player_counter <= 6 and AI_counter <= 6:
         
@@ -2265,6 +2492,17 @@ def AI_player_turn():
 
 def End_prompt():
     
+    """
+    ========================================================
+    
+    Author: James Morillo
+    
+    End prompt to ask Player to play again. Also displays 
+    winner on the window.
+    
+    ========================================================
+    """
+    
     global redraw_gameboard
     global End_prompt
     global AI_counter
@@ -2272,14 +2510,6 @@ def End_prompt():
     global Player
     global AI_player
     global game_screen
-    
-    root.destroy()
-    
-    AI_counter = 0
-    Player_counter = 0
-    
-    Player = {}
-    AI_player = AI_player
     
     End_prompt = Tk()
     End_prompt.title("Game Over")
@@ -2292,12 +2522,12 @@ def End_prompt():
     else:
         Win_announcer = Label(End_prompt, text = "YOU WON!")
         Win_announcer.pack()
-        
+
     
     play_again = Button(End_prompt, 
                         height = 2, 
                         width = 10, 
-                        command=basegame,
+                        command=play,
                         highlightbackground='white', text = "Play Again")
     
     play_again.place(relx = 0, rely = 0.5, anchor = W)
@@ -2312,6 +2542,30 @@ def End_prompt():
     quit_game.place(relx = 1, rely = 0.5, anchor = E)
     quit_game.pack()
     
+    End_prompt.mainloop()
+
+
+def play():
+    global End_prompt
+    global redraw_gameboard
+    global AI_counter
+    global Player_counter
+    global Player
+    global AI_player
+    global game_screen
+    global root
+    
+    root.destroy()
+    End_prompt.destroy()
+    
+    Player = {}
+    AI_player = AI_player
+        
+    AI_counter = 0
+    Player_counter = 0
+    
+    basegame()
+
 def quit_battleship():
     global redraw_gameboard
     global End_prompt
