@@ -8,7 +8,7 @@ functions from other python files.
 This is really long, so be prepared.
 '''
 
-import tkinter as tk # imports all names from tkinter as tk
+#import tkinter as tk # imports all names from tkinter as tk
 from tkinter import * # to import all names from tkinter
 
 # Note: It is assumed that both importing methods are used in the code.
@@ -59,6 +59,7 @@ def login():
     ===========================================
     """
     global login_screen
+    
     login_screen = Toplevel(window)
     login_screen.title("Login")
 
@@ -335,6 +336,7 @@ Player = {}
 # imported from login/signup GUI
 def basegame():
     global game_screen
+    
     login_success_screen.destroy()
     login_screen.destroy()
     
@@ -718,10 +720,27 @@ def submarine_alert_message():
     else:
         Player["Submarine"] = "" # Restoring dictionary to empty value due to rejected spot
         submarine_placing_button()
-    
-AI_player = {'Carrier':[(12,12,1), (12,13,1), (12,14,1), (12,15,1)], 'Submarine': [(12,0,0), (12,1,0), (12,2,0)]}
 
 
+
+
+AI_player_submarine_randomizer_row = random.randint(13,20)
+AI_player_submarine_randomizer_column = random.randint(1,8)
+
+
+AI_player_surface_randomizer_row = random.randint(12,21)
+AI_player_surface_randomizer_column = random.randint(11,17)
+
+
+AI_player = {'Carrier':[(AI_player_surface_randomizer_row,AI_player_surface_randomizer_column,1), 
+                        (AI_player_surface_randomizer_row,AI_player_surface_randomizer_column+1,1), 
+                        (AI_player_surface_randomizer_row,AI_player_surface_randomizer_column+2,1), 
+                        (AI_player_surface_randomizer_row,AI_player_surface_randomizer_column+3,1)],
+                        'Submarine': [(AI_player_submarine_randomizer_row,AI_player_submarine_randomizer_column-1,0), 
+                                      (AI_player_submarine_randomizer_row,AI_player_submarine_randomizer_column,0), 
+                                      (AI_player_submarine_randomizer_row,AI_player_submarine_randomizer_column+1,0)]}
+
+print (AI_player)
 AI_counter = 0
 Player_counter = 0 
 
@@ -737,6 +756,10 @@ def redraw_boards():
     global AI_frame
     global Player_frame
     global root
+    global surface_screen
+    
+    surface_screen.destroy()
+    game_screen.destroy()
     
     Player["Player Surface"] = {}
     Player["Player Underwater"] = {}
@@ -843,7 +866,7 @@ def redraw_boards():
         
         player_ship_location.grid(row = Player["Submarine"][i][0], column = Player["Submarine"][i][1])
     
-    redraw_gameboard.mainloop()
+    root.mainloop()
 
 
 
@@ -862,17 +885,39 @@ def AI_hit_missed():
 
 
 def End_prompt():
-    
+    global redraw_gameboard
     global End_prompt
+    global AI_counter
+    global Player_counter
+    global Player
+    global AI_player
+    global game_screen
+    
+    root.destroy()
+    
+    AI_counter = 0
+    Player_counter = 0
+    
+    Player = {}
+    AI_player = AI_player
+    
     End_prompt = Tk()
-    End_prompt.title("You Won the Game")
+    End_prompt.title("Game Over")
     End_prompt.geometry("250x250")
     End_prompt.resizable(False, False)
+    
+    if AI_player == 7:
+        Win_announcer = Label(End_prompt, text = "BOT WON.")
+        Win_announcer.pack()
+    else:
+        Win_announcer = Label(End_prompt, text = "YOU WON!")
+        Win_announcer.pack()
+        
     
     play_again = Button(End_prompt, 
                         height = 2, 
                         width = 10, 
-                        command=player_boards,
+                        command=basegame,
                         highlightbackground='white', text = "Play Again")
     
     play_again.place(relx = 0, rely = 0.5, anchor = W)
@@ -887,36 +932,15 @@ def End_prompt():
     quit_game.place(relx = 1, rely = 0.5, anchor = E)
     quit_game.pack()
     
-
-def play_again():
-    global redraw_gameboard
-    global End_prompt
-    global AI_counter
-    global Player_counter
-
-    redraw_gameboard.destroy()
-    End_prompt.destroy()
-    login_success_screen.destroy()
-    login_screen.destroy()
-    
-    AI_counter = 0
-    Player_counter = 0
-    
-    Player = {}
-    basegame()
-    
-
-    
 def quit_battleship():
     global redraw_gameboard
     global End_prompt
     global window
     global login_screen
+    global main_account_screen
     
     End_prompt.destroy()
-    redraw_gameboard.destroy()
     window.destroy()
-    login_screen.destroy()
     
 
 def draw_new_button_hit(row, column):
@@ -2193,7 +2217,7 @@ def AI_player_turn():
     global Player
     global AI_player
     
-    print ("Player counter = %d | AI counter = %d." % (Player_counter, AI_counter))
+    print ("Player Score = %d | AI Score = %d. First hit 7 wins." % (Player_counter, AI_counter))
     
     if Player_counter <= 6 and AI_counter <= 6:
         
