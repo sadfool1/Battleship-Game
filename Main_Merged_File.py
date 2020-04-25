@@ -8,7 +8,7 @@ functions from other python files.
 This is really long, so be prepared.
 '''
 
-#import tkinter as tk # imports all names from tkinter as tk
+import tkinter as tk # imports all names from tkinter as tk
 from tkinter import * # to import all names from tkinter
 
 # Note: It is assumed that both importing methods are used in the code.
@@ -2444,9 +2444,12 @@ def AI_player_turn():
     global AI_player
     
     #prints this to keep check
-    print ("Player Score = %d | AI Score = %d. First to hit 7 wins." % (Player_counter, AI_counter))
+    
     
     if Player_counter <= 6 and AI_counter <= 6:
+        print ("")
+        print ("Player Score = %d | AI Score = %d. First to hit 7 wins." % (Player_counter, AI_counter))
+        print ("")
         
         random_surface = random.randint(0,1)
         if random_surface == 0:
@@ -2457,11 +2460,13 @@ def AI_player_turn():
         
             if Player["Player Underwater"][random_underwater_x][random_underwater_y]["Presence"] == "HIT":
                 print ("Bot Thinking...")
+                print ("")
                 AI_player_turn()
         
             else:
-                print("AI shooting Player Underwater", end = '')
+                print("AI shot Player Underwater", end = '')
                 print (" at coordinate %d row %d column"%(row,column))
+                print ("")
                 scatter_shot(row, column, 0)
                 
                 
@@ -2473,19 +2478,23 @@ def AI_player_turn():
             
             if Player["Player Surface"][random_surface_x][random_surface_y]["Presence"] == "HIT":
                 print ("Bot Thinking...")
+                print ("")
                 AI_player_turn()
                 
         
             else:
-                print("AI shooting Player Surface", end = '')
+                print("AI shot Player Surface", end = '')
                 print (" at coordinate %d row %d column"%(row,column))
+                print ("")
                 scatter_shot(row, column, 1)
     else:
         if Player_counter == 7:
+            print ("")
             print ("Player Won")
             End_prompt()
         else:
-            print ("AI Won, better luck next time")
+            print ("")
+            print ("AI Won, better luck next time.")
             End_prompt()
 
 
@@ -2555,7 +2564,7 @@ def play():
     global game_screen
     global root
     
-    root.destroy()
+    root.pack_forget()
     End_prompt.destroy()
     
     Player = {}
@@ -2572,9 +2581,11 @@ def quit_battleship():
     global window
     global login_screen
     global main_account_screen
+    global root
     
     End_prompt.destroy()
     window.destroy()
+    root.withdraw()
     
 
 main_account_screen()
