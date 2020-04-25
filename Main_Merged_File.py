@@ -769,7 +769,7 @@ AI_player = {'Carrier':[(AI_player_surface_randomizer_row,AI_player_surface_rand
 """
 ====================================================================
 Author: James Morillo
-Initilise AI Carriers and Player global counter for win/lose 
+Initilise AI Carriers and Player global counters to 0 for win/lose 
 condition. First one to get 7 points win.
 ====================================================================
 """
