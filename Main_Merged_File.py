@@ -163,10 +163,21 @@ def password_not_recognised():
     counter += 1
 
 def delete_password_not_recognised():
+    """
+    ==========================================
+    Author: BRYAN LIM
+    Destroying popup for login invalid password
+    ==========================================
+    """
     password_not_recog_screen.destroy()
 
-# Designing popup for user not found
 def user_not_found():
+    """
+    ==========================================
+    Author: BRYAN LIM
+    Designing popup for user not found
+    ==========================================
+    """
     global user_not_found_screen
     user_not_found_screen = Toplevel(login_screen)
     user_not_found_screen.title("Success")
@@ -179,9 +190,13 @@ def delete_user_not_found_screen():
     user_not_found_screen.destroy()
     signup()
 
-# designing new screen for reactivating account
-
 def reactivate_account():
+    """
+    ==========================================
+    Author: BRYAN LIM
+    Designing new screen for reactivating account
+    ==========================================
+    """
     global reactivate_screen
     reactivate_screen = Toplevel(login_screen)
 
@@ -195,6 +210,12 @@ def reactivate_account():
     Button(reactivate_screen, text="Reactivate Account", command = dob_verify).pack()
 
 def dob_verify():
+    """
+    ==========================================
+    Author: BRYAN LIM
+    Date of Birth verification
+    ==========================================
+    """
     global dob_activation
     global Button1
     global counter
@@ -222,7 +243,7 @@ def signup():
     Author: 
         BRYAN LIM 
         ODELIA
-    Designing popup for login invalid password
+    Designing new screen for sign ups
     ==========================================
     """
     global signup_screen
@@ -266,7 +287,7 @@ def signup_user():
     Author: 
         BRYAN LIM 
         ODELIA
-    Designing popup for login invalid password
+    Username/PW/DoB validity check and storing of user data
     ==========================================
     """
     username_info = username_signup.get()
@@ -352,6 +373,15 @@ Player = {}
 # making the screen to choose to start a new game or continue an existing game
 # imported from login/signup GUI
 def basegame():
+    """
+    ==========================================
+    Author: 
+        BRYAN LIM 
+        ODELIA
+    Designing main game screen
+    (and are we removing load game or not?)
+    ==========================================
+    """
     global game_screen
     
     login_success_screen.destroy()
@@ -367,6 +397,13 @@ def basegame():
     
 # making the boards used in the game        
 def player_boards():
+    """
+    ==========================================
+    Author: 
+        BRYAN LIM 
+    Designing ship placement screen
+    ==========================================
+    """
     global surface_screen
     global direction
     global shiptype
@@ -401,6 +438,13 @@ def player_boards():
 
 # Function used to place the grid of buttons for carrier flagship
 def carrier_placing_button():
+    """
+    ==========================================
+    Author: 
+        BRYAN LIM 
+    Placing the grid of buttons on ship placement screen for carrier flagship
+    ==========================================
+    """
     for i in range(1, 11):
         for j in range(10):
             invalid_btn = Button(surface_screen, height = 2, width = 4, command=invalid_placement)
@@ -415,6 +459,13 @@ def carrier_placing_button():
 
 # Message box to tell players to not place carriers underwater
 def invalid_placement():
+    """
+    ==========================================
+    Author: 
+        BRYAN LIM 
+    Pop-up to prevent placing carriers underwater
+    ==========================================
+    """
     messagebox.showinfo("Invalid", "Carriers cannot be placed underwater.")
 
 # "Link function" to allow tkinter buttons to have commands that need parameters
@@ -423,6 +474,13 @@ def callback_carrier(i, j):
 
 # Function determining the position of the carrier based on chosen radiobutton
 def carrier_button(row, column):
+    """
+    ==========================================
+    Author: 
+        BRYAN LIM 
+    Placing the carrier flagship based on chosen orientation
+    ==========================================
+    """
     global carrier_btn
     global Player
 
@@ -498,6 +556,13 @@ def carrier_button(row, column):
 
 # subfunction to disable all buttons once a ship position is chosen
 def close_button():
+    """
+    ==========================================
+    Author: 
+        BRYAN LIM 
+    Disabling all buttons while confirming position of carrier
+    ==========================================
+    """
     for i in range(1, 11):
         for j in range(10):
             btn = Button(surface_screen, height = 2, width = 4)
@@ -512,7 +577,14 @@ def close_button():
             btn.config(state="disabled")
 
 # message box to confirm selection of carrier spot
-def carrier_alert_message():    
+def carrier_alert_message():
+    """
+    ==========================================
+    Author: 
+        BRYAN LIM 
+    Pop-up box to confirm selection of carrier spot
+    ==========================================
+    """
     CarrierMsg = messagebox.askquestion('Confirmation','Do you want to place your carrier flagship here?')
 
     if CarrierMsg == 'yes':
@@ -528,7 +600,16 @@ def carrier_alert_message():
         carrier_placing_button()
 
 # function to obtain the rows of the carrier to make sure the button color is not erased while placing the grid for submarines
+    """
+    ==========================================
+    Author: 
+        BRYAN LIM 
+    Obtaining carrier row and column details to prevent submarine from being placed there
+    (carrier_row_extractor and carrier_column_extractor)
+    ==========================================
+    """
 def carrier_row_extractor():
+
     global Player
     global Carrier_Row
     
@@ -547,6 +628,13 @@ def carrier_column_extractor():
 
 # Function used to place the functions grid for submarines
 def submarine_placing_button():
+    """
+    ==========================================
+    Author: 
+        BRYAN LIM 
+    Placing the grid of buttons on ship placement screen for submarine
+    ==========================================
+    """
     global Carrier_Row
     global Carrier_Column
 
@@ -572,13 +660,16 @@ def submarine_placing_button():
 def callback_submarine(i,j):
     return lambda: submarine_button(i,j)
 
-'''
-This function works the same as carrier_button, with a few changes:
+"""
+==========================================
+Author: 
+    BRYAN LIM 
+Placing the submarine based on chosen orientation, but:
 1) If underwater board is chosen, coordinates will be stored in (x,y,0) format.
-2) close_button2() omits the carrier flagship's position so as not to wipe the red coloring.
-3) Submarines are blue instead of red and they have a length of 3.
-4) Added checks are done to ensure that submarines don't overlap with carriers.
-'''
+2) Submarines are blue instead of red and they have a length of 3.
+3) Added checks are done to ensure that submarines don't overlap with carriers.
+==========================================
+"""
 
 # Function determining the position of the submarine based on chosen radiobutton
 def submarine_button(row, column):
@@ -712,7 +803,16 @@ def submarine_button(row, column):
             messagebox.showinfo("Invalid", "Invalid ship placement")
 
 # subfunction to close all button functions once a ship position is chosen accomodating for carrier button color
+
 def close_button2():
+    """
+    ==========================================
+    Author: 
+        BRYAN LIM 
+    Disabling all buttons while confirming position of submarine
+    Added checks are done to not affect the red buttons reflecting the carrier's position
+    ==========================================
+    """
     for i in range(1, 11):
         for j in range(10):
             btn = Button(surface_screen, height = 2, width = 4, command=callback_submarine(i,j))
@@ -729,7 +829,14 @@ def close_button2():
 
 # message box to confirm selection of submarine spot
                 
-def submarine_alert_message():    
+def submarine_alert_message():
+    """
+    ==========================================
+    Author: 
+        BRYAN LIM 
+    Pop-up box to confirm selection of submarine spot
+    ==========================================
+    """
     SubmarineMsg = messagebox.askquestion('Confirmation','Do you want to place your submarine here?')
 
     if SubmarineMsg == 'yes':
