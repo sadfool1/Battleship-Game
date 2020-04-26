@@ -2598,11 +2598,22 @@ def AI_player_turn():
         if Player_counter == 7:
             print ("")
             print ("Player Won")
-            End_prompt()
+            
+            try:
+                End_prompt()
+                
+            except TypeError:
+                End_prompt.deiconify()
+                
+                
         else:
             print ("")
             print ("AI Won, better luck next time.")
-            End_prompt()
+            try:
+                End_prompt()
+                
+            except TypeError:
+                End_prompt.deiconify()
 
 
 
@@ -2671,11 +2682,25 @@ def play():
     global game_screen
     global root
     
-    root.pack_forget()
-    End_prompt.destroy()
+    root.destroy()
+    End_prompt.withdraw()
     
     Player = {}
-    AI_player = AI_player
+    
+    AI_player_submarine_randomizer_row = random.randint(13,20)
+    AI_player_submarine_randomizer_column = random.randint(1,8)
+    
+    
+    AI_player_surface_randomizer_row = random.randint(12,21)
+    AI_player_surface_randomizer_column = random.randint(11,17)
+    
+    AI_player = {'Carrier':[(AI_player_surface_randomizer_row,AI_player_surface_randomizer_column,1), 
+                            (AI_player_surface_randomizer_row,AI_player_surface_randomizer_column+1,1), 
+                            (AI_player_surface_randomizer_row,AI_player_surface_randomizer_column+2,1), 
+                            (AI_player_surface_randomizer_row,AI_player_surface_randomizer_column+3,1)],
+                            'Submarine': [(AI_player_submarine_randomizer_row,AI_player_submarine_randomizer_column-1,0), 
+                                          (AI_player_submarine_randomizer_row,AI_player_submarine_randomizer_column,0), 
+                                          (AI_player_submarine_randomizer_row,AI_player_submarine_randomizer_column+1,0)]}
         
     AI_counter = 0
     Player_counter = 0
@@ -2686,7 +2711,6 @@ def quit_battleship():
     global redraw_gameboard
     global End_prompt
     global window
-    global login_screen
     global main_account_screen
     global root
     
