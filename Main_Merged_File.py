@@ -1858,6 +1858,10 @@ def top_right_corner_shot(row, column):
                     
             else:
                 draw_new_button_miss(shots[i][0], shots[i][1])
+        if counter > 0:
+            hit_shot()
+        else:
+            hit_missed() 
     
     
     
@@ -1992,6 +1996,10 @@ def top_left_corner_shot(row, column):
                 
             else:
                 draw_new_button_miss(shots[i][0], shots[i][1])
+        if counter > 0:
+            hit_shot()
+        else:
+            hit_missed() 
 
                 
 def bottom_left_corner_shot(row, column):
@@ -2125,6 +2133,10 @@ def bottom_left_corner_shot(row, column):
             
             else:
                 draw_new_button_miss(shots[i][0], shots[i][1])
+        if counter > 0:
+            hit_shot()
+        else:
+            hit_missed() 
     
 def bottom_right_corner_shot(row, column):
     """
@@ -2232,9 +2244,9 @@ def bottom_right_corner_shot(row, column):
             else:
                 draw_new_button_miss(shots[i][0], shots[i][1])
         if counter > 0:
-            AI_hit()
+            hit_shot()
         else:
-            AI_hit_missed()
+            hit_missed()
             
     else:
         """
@@ -2256,6 +2268,10 @@ def bottom_right_corner_shot(row, column):
                 AI_player["AI Surface"][shots[i][0]][shots[i][1]]["REF"] = "SHIP HIT"           
             else:
                 draw_new_button_miss(shots[i][0], shots[i][1])
+        if counter > 0:
+            AI_hit()
+        else:
+            AI_hit_missed()
  
     
 def scatter_shot(row, column, depth):
