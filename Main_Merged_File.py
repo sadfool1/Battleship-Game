@@ -858,7 +858,7 @@ def redraw_boards():
             AI_underwater_cell = Button(AI_frame, 
                                         height = button_height, 
                                         width = button_width,
-                                        highlightbackground="#000080",
+                                        bg="#000080",
                                         command=lambda row=i, column=j, depth = 0: shoot(row, column, depth))
             AI_underwater_cell.grid(row=i, column=j)
             
@@ -873,7 +873,7 @@ def redraw_boards():
                                             height = button_height, 
                                             width = button_width, 
                                             command=cannot_shoot,
-                                            highlightbackground="#000080")
+                                            bg="#000080")
             player_underwater_cell.grid(row=i, column=j)
             
             
@@ -887,7 +887,7 @@ def redraw_boards():
                                          height = button_height, 
                                          width = button_width, 
                                          command=cannot_shoot,
-                                         highlightbackground="#1E90FF")
+                                         bg="#1E90FF")
             player_surface_cell.grid(row=i, column=j) 
         
     
@@ -900,7 +900,7 @@ def redraw_boards():
             AI_surface_cell = Button(AI_frame, 
                                      height = button_height, 
                                      width = button_width, 
-                                     highlightbackground="#1E90FF",
+                                     bg="#1E90FF",
                                      command=lambda row=i, column=j, depth = 1: shoot(row, column, depth))
             
             AI_surface_cell.grid(row=i, column=j)
@@ -912,7 +912,7 @@ def redraw_boards():
                                       height = button_height, 
                                       width = button_width, 
                                       command=cannot_shoot,
-                                      highlightbackground="#2E8B57")
+                                      bg="#2E8B57")
         
         player_ship_location.grid(row = Player["Carrier"][i][0], column = Player["Carrier"][i][1])
 
@@ -921,7 +921,7 @@ def redraw_boards():
                                       height = button_height, 
                                       width = button_width, 
                                       command=cannot_shoot,
-                                      highlightbackground="#2E8B57")
+                                      bg="#2E8B57")
         
         player_ship_location.grid(row = Player["Submarine"][i][0], column = Player["Submarine"][i][1])
     
@@ -1065,7 +1065,7 @@ def draw_new_button_miss(row, column):
                             height = button_height, 
                             width = button_width,
                             command= already_shot, 
-                            highlightbackground='black')
+                            bg='black')
         
         new_button.grid(row = row, column = column, in_ = Player_frame)
         new_button.lift()
@@ -1075,7 +1075,7 @@ def draw_new_button_miss(row, column):
                             height = button_height, 
                             width = button_width,
                             command= already_shot, 
-                            highlightbackground='black')
+                            bg='black')
         
         new_button.grid(row = row, column = column, in_ = AI_frame)
         new_button.lift()
@@ -1085,7 +1085,7 @@ def draw_new_button_miss(row, column):
                             height = button_height, 
                             width = button_width,
                             command= already_shot, 
-                            highlightbackground='black')
+                            bg='black')
         
         new_button.grid(row = row, column = column, in_ = Player_frame)
         new_button.lift()
@@ -1095,7 +1095,7 @@ def draw_new_button_miss(row, column):
                             height = button_height, 
                             width = button_width,
                             command= already_shot, 
-                            highlightbackground='black')
+                            bg='black')
         
         new_button.grid(row = row, column = column, in_ = AI_frame)
         new_button.lift()
@@ -2537,7 +2537,7 @@ def End_prompt():
                         height = 2, 
                         width = 10, 
                         command=play,
-                        highlightbackground='white', text = "Play Again")
+                        bg='white', text = "Play Again")
     
     play_again.place(relx = 0, rely = 0.5, anchor = W)
     play_again.pack()
@@ -2546,7 +2546,7 @@ def End_prompt():
                         height = 2, 
                         width = 10, 
                         command=quit_battleship,
-                        highlightbackground='white', text = "Quit")
+                        bg='white', text = "Quit")
     
     quit_game.place(relx = 1, rely = 0.5, anchor = E)
     quit_game.pack()
