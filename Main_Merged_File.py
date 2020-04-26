@@ -1089,18 +1089,24 @@ def draw_new_button_hit(row, column):
     #frame dependent therefore, we bring to front the img as they are in different frames, hence the master is different for some buttons
     
     if row  <= 10 and column <= 10:
+        """
+        Player Underwater
+        """
         new_button = Button(root,
                             image=imtk,
                             height = 20+10, 
                             width = 20+16,
-                            command= already_shot, state = DISABLED)
+                            command= already_shot, state = DISABLED) #We place it window so it is on top of frames
         
-        Player_frame.lower() #we lower this old frame then lift the new button 
+        Player_frame.lower() #we lower this old frame then lift the new button so it appears in window
         new_button.image = imtk
         new_button.lift() 
         new_button.grid(row = row, column = column, in_ = Player_frame)
                 
     elif row >= 12 and column <= 9:
+        """
+        AI Underwater
+        """
         new_button = Button(root,
                             image=imtk,
                             height = 20+10, 
@@ -1114,6 +1120,9 @@ def draw_new_button_hit(row, column):
         
         
     elif row <= 10 and column >= 11:
+        """
+        Player Surface
+        """
         new_button = Button(root,
                             image=imtk,
                             height = 20+10, 
@@ -1126,6 +1135,9 @@ def draw_new_button_hit(row, column):
         new_button.lift()
         
     else:
+        """
+        AI Surface
+        """
         new_button = Button(AI_frame,
                             image=imtk,
                             height = 20+10, 
