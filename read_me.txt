@@ -13,7 +13,8 @@ Make sure to Run Merged File in .py and place image "explosion.png" in same fold
 
 Note:
 
-To Mac users: Need to change Button from bg = 'black' to highlightbackground = 'black'. Checked online and this seems to be a problem to all Mac users. 
+To Mac users: Need to change Button from bg = 'black' to highlightbackground = 'black'. Checked online 
+and this seems to be a problem to all Mac users. 
 
 Hence file format is best run in WINDOWS.
 
