@@ -914,7 +914,7 @@ def redraw_boards():
     surface_screen.destroy()
     game_screen.destroy()
     
-    #initialise tuples for creating the board contents
+    #initialise dict for creating the board contents
     Player["Player Surface"] = {}
     Player["Player Underwater"] = {}
     AI_player["AI Surface"] = {}
@@ -944,7 +944,6 @@ def redraw_boards():
     # Preparing spacings between the grids to have a neater UI.
     Label(Player_frame, text="", height = 20, width = 4).grid(row=1, column=10, rowspan=10)
     Label(AI_frame, text="", height = 20, width = 4).grid(row=11, column=10, rowspan=10)
-    
 
     """
     
@@ -958,7 +957,7 @@ def redraw_boards():
     
     for i in range(12, 22):
         AI_player["AI Underwater"][i] = {}
-        for j in range(10):
+        for j in range(10): 
             AI_player["AI Underwater"][i][j] = {}
             AI_player["AI Underwater"][i][j]["Presence"] = None
             AI_player["AI Underwater"][i][j]["REF"] = None
@@ -968,7 +967,8 @@ def redraw_boards():
                                         bg="#000080",
                                         command=lambda row=i, column=j, depth = 0: shoot(row, column, depth))
             AI_underwater_cell.grid(row=i, column=j)
-            
+    
+    #this is the standard template for each grid board.
             
     for i in range(1, 11):
         Player["Player Underwater"][i] = {}
@@ -1013,7 +1013,9 @@ def redraw_boards():
             AI_surface_cell.grid(row=i, column=j)
     
     
-    #This 2 for loops are just to highlight the player's Ships in their own Battle Field
+    """
+    This 2 for loops are just to highlight the player's Ships in their own Battle Field
+    """
     for i in range(len(Player["Carrier"])):
         player_ship_location = Button(Player_frame,
                                       height = button_height, 
@@ -1099,7 +1101,7 @@ def draw_new_button_hit(row, column):
                             command= already_shot, state = DISABLED) #We place it window so it is on top of frames
         
         Player_frame.lower() #we lower this old frame then lift the new button so it appears in window
-        new_button.image = imtk
+        new_button.image = imtk #this is required for keeping a refference, else it wont show the effect
         new_button.lift() 
         new_button.grid(row = row, column = column, in_ = Player_frame)
                 
@@ -1176,10 +1178,18 @@ def draw_new_button_miss(row, column):
     global AI_frame
     global Player_frame
 
-    #frame dependent therefore, we bring to front the img as they are in different frames, hence the master is different for some buttons
+    #frame dependent therefore, we bring to front the img as they are in different frames, 
+    #hence the master is different for some buttons
+    
+    """
+    The miss button changes simply causes the colour of the buttons to change.
+    """
 
     if row  <= 10 and column <= 10:
         
+        """
+        Player Underwater
+        """
         new_button = Button(Player_frame,
                             height = button_height, 
                             width = button_width,
@@ -1190,6 +1200,9 @@ def draw_new_button_miss(row, column):
         new_button.lift()
                 
     elif row >= 12 and column <= 9:
+        """
+        AI Underwater
+        """
         new_button = Button(AI_frame,
                             height = button_height, 
                             width = button_width,
@@ -1200,6 +1213,9 @@ def draw_new_button_miss(row, column):
         new_button.lift()
         
     elif row <= 10 and column >= 11:
+        """
+        Player Surface
+        """
         new_button = Button(Player_frame,
                             height = button_height, 
                             width = button_width,
@@ -1210,6 +1226,9 @@ def draw_new_button_miss(row, column):
         new_button.lift()
         
     else:
+        """
+        AI Surface
+        """
         new_button = Button(AI_frame,
                             height = button_height, 
                             width = button_width,
@@ -1261,6 +1280,12 @@ def top_boundary_shot(row, column):
               (row+1, column-1,1)]
     
     if row  <= 10 and column <= 10:
+        """
+        Player Underwater
+        The template below is standard for the rest of the boards
+        If it is a hit, buttons change
+        Updates counters accordingly.
+        """
         counter = 0
         for i in range(len(shots)):
             Player["Player Underwater"][shots[i][0]][shots[i][1]]["Presence"] = "HIT"
@@ -1284,6 +1309,9 @@ def top_boundary_shot(row, column):
             AI_hit_missed()
                 
     elif row >= 12 and column <= 9:
+        """
+        AI Underwater
+        """
         counter = 0
         for i in range(len(shots)):
             AI_player["AI Underwater"][shots[i][0]][shots[i][1]]["Presence"] = "HIT"
@@ -1308,6 +1336,9 @@ def top_boundary_shot(row, column):
             hit_missed()
     
     elif row <= 10 and column >= 11:
+        """
+        Player Surface
+        """
         counter = 0
         for i in range(len(shots)):
             Player["Player Surface"][shots[i][0]][shots[i][1]]["Presence"] = "HIT"
@@ -1330,6 +1361,9 @@ def top_boundary_shot(row, column):
             AI_hit_missed()
         
     else:
+        """
+        AI Surface
+        """
         counter = 0
         for i in range(len(shots)):
             AI_player["AI Surface"][shots[i][0]][shots[i][1]]["Presence"] = "HIT"
@@ -1358,7 +1392,7 @@ def bottom_boundary_shot(row, column):
     ======================================================
     
     Author: James Morillo
-    Here, scatter hots are different in boundary condition
+    Here, scatter shots are different in boundary condition
     and require special treatment. Hence, only 6 available
     shots.
     
@@ -1391,6 +1425,12 @@ def bottom_boundary_shot(row, column):
               (row, column-1,1)]
     
     if row  <= 10 and column <= 10:
+        """
+        Player Underwater
+        The template below is standard for the rest of the boards
+        If it is a hit, buttons change
+        Updates counters accordingly.
+        """
         counter = 0
         for i in range(len(shots)):
             Player["Player Underwater"][shots[i][0]][shots[i][1]]["Presence"] = "HIT"
@@ -1414,6 +1454,9 @@ def bottom_boundary_shot(row, column):
             AI_hit_missed()
                 
     elif row >= 12 and column <= 9:
+        """
+        AI Underwater
+        """
         counter = 0
         for i in range(len(shots)):
             AI_player["AI Underwater"][shots[i][0]][shots[i][1]]["Presence"] = "HIT"
@@ -1438,6 +1481,9 @@ def bottom_boundary_shot(row, column):
             hit_missed()
     
     elif row <= 10 and column >= 11:
+        """
+        Player Surface
+        """
         counter = 0
         for i in range(len(shots)):
             Player["Player Surface"][shots[i][0]][shots[i][1]]["Presence"] = "HIT"
@@ -1460,6 +1506,9 @@ def bottom_boundary_shot(row, column):
             AI_hit_missed()
         
     else:
+        """
+        AI SURFACE
+        """
         counter = 0
         for i in range(len(shots)):
             AI_player["AI Surface"][shots[i][0]][shots[i][1]]["Presence"] = "HIT"
@@ -1487,7 +1536,7 @@ def left_boundary_shot(row, column):
     ======================================================
     
     Author: James Morillo
-    Here, scatter hots are different in boundary condition
+    Here, scatter shots are different in boundary condition
     and require special treatment. Hence, only 6 available
     shots.
     
@@ -1916,15 +1965,15 @@ def top_left_corner_shot(row, column):
         """
         counter = 0
         for i in range(len(shots)):
-            Player["Player Underwater"][shots[i][0]][shots[i][1]]["Presence"] = "HIT"
+            Player["Player Underwater"][shots[i][0]][shots[i][1]]["Presence"] = "HIT" #To make sure that it is HIT
             if shots[i] == Player["Submarine"][0] or shots[i] == Player["Submarine"][1] or shots[i] == Player["Submarine"][2]:
-                counter = counter + 1
+                counter = counter + 1 #this counter is for calling if it is a miss or a hit
                 draw_new_button_hit(shots[i][0], shots[i][1])
                 
                 if Player["Player Underwater"][shots[i][0]][shots[i][1]]["REF"] == "SHIP HIT":
                     pass
                 else:
-                    AI_counter = AI_counter + 1
+                    AI_counter = AI_counter + 1 #this counter is for managing to hit the ship. If it is already a SHIP HIT, it is passed, else added + 1
                 
                 Player["Player Underwater"][shots[i][0]][shots[i][1]]["REF"] = "SHIP HIT"
                 
@@ -1932,6 +1981,7 @@ def top_left_corner_shot(row, column):
             else:
                 draw_new_button_miss(shots[i][0], shots[i][1])
         if counter > 0:
+            #for counter > 0, it is a hit and if it is 0, it is a miss.
             AI_hit()
         else:
             AI_hit_missed()
@@ -2578,15 +2628,12 @@ def AI_player_turn():
     global Player
     global AI_player
     
-    #prints this to keep check
-    
-    
     if Player_counter <= 6 and AI_counter <= 6:
         print ("")
         print ("Player Score = %d | AI Score = %d. First to hit 7 wins." % (Player_counter, AI_counter))
         print ("")
         
-        random_surface = random.randint(0,1)
+        random_surface = random.randint(0,1) #this just randomly chooses the surface type it will hit
         if random_surface == 0:
             random_underwater_x = random.randint(1,10)
             random_underwater_y = random.randint(0,9)
@@ -2596,14 +2643,15 @@ def AI_player_turn():
             if Player["Player Underwater"][random_underwater_x][random_underwater_y]["Presence"] == "HIT":
                 print ("Bot Thinking...")
                 print ("")
+                #invalid shot so it will run again
                 AI_player_turn()
         
             else:
                 print("AI shot Player Underwater", end = '')
                 print (" at coordinate %d row %d column"%(row,column))
                 print ("")
+                #prints out the target it will shoot then applies scatter shot
                 scatter_shot(row, column, 0)
-                
                 
         else:
             random_surface_x = random.randint(1,10)
@@ -2621,6 +2669,7 @@ def AI_player_turn():
                 print("AI shot Player Surface", end = '')
                 print (" at coordinate %d row %d column"%(row,column))
                 print ("")
+                #prints out the target it will shoot then applies scatter shot
                 scatter_shot(row, column, 1)
     else:
         if Player_counter == 7:
